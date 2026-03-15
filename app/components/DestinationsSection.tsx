@@ -1,17 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type Destination = {
-  id: string
-  name: string
-  location: string
-  image_url: string | null
-  rating: number | null
-  price: number
-}
+import type { Destination } from "@/app/page"
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

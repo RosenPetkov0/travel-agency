@@ -53,7 +53,7 @@ const fadeUp = {
     transition: {
       delay: 0.3 + i * 0.15,
       duration: 0.75,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   }),
 }
@@ -64,7 +64,7 @@ const floatingCard = (delay: number) => ({
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { delay, duration: 0.65, ease: [0.34, 1.56, 0.64, 1] },
+    transition: { delay, duration: 0.65, ease: [0.34, 1.56, 0.64, 1] as const },
   },
 })
 
@@ -294,7 +294,7 @@ export default function HeroSection() {
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.1, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ delay: 1.1, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] as const }}
         className="absolute bottom-8 left-1/2 z-20 w-full max-w-3xl -translate-x-1/2 px-4"
       >
         <div
