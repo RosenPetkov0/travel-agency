@@ -1,14 +1,35 @@
 "use client"
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { useState } from "react"
+import { useState, useRef, useEffect, forwardRef } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import DatePicker from "react-datepicker"
+import { format } from "date-fns"
+import "react-datepicker/dist/react-datepicker.css"
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const HERO_BG =
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80"
 
-const NAV_LINKS = ["Destinations", "Experiences", "Packages", "About"]
+const NAV_LINKS = [
+  { label: "Destinations", href: "/destinations" },
+  { label: "Experiences", href: "/experiences" },
+  { label: "Packages", href: "/packages" },
+  { label: "About", href: "/about" },
+]
+
+const SUGGESTIONS = [
+  { label: "Monaco Grand Prix", sub: "French Riviera · F1" },
+  { label: "Singapore Night Race", sub: "Marina Bay · F1" },
+  { label: "Abu Dhabi Yas Marina", sub: "UAE · F1" },
+  { label: "Maldives Paradise", sub: "Indian Ocean · Beach" },
+  { label: "Santorini Escape", sub: "Greece · Islands" },
+  { label: "Kyoto", sub: "Japan · Culture" },
+  { label: "Amalfi Coast", sub: "Italy · Scenic" },
+  { label: "Bali", sub: "Indonesia · Tropical" },
+]
 
 const STATS = [
   { value: "500+", label: "Destinations" },
@@ -22,7 +43,7 @@ const BADGES = [
     country: "Greece",
     rating: "4.9",
     icon: "🏛️",
-    style: { top: "22%", right: "8%" },
+    style: { top: "22%", right: "1.5rem" },
     delay: 1.3,
   },
   {
@@ -68,10 +89,74 @@ const floatingCard = (delay: number) => ({
   },
 })
 
+// ─── Custom DatePicker Input ──────────────────────────────────────────────────
+
+interface DateInputProps {
+  value?: string
+  onClick?: () => void
+  placeholder?: string
+  displayValue?: string
+}
+
+const CustomDateInput = forwardRef<HTMLInputElement, DateInputProps>(
+  ({ onClick, placeholder, displayValue, value }, ref) => (
+    <input
+      ref={ref}
+      value={displayValue ?? value ?? ""}
+      readOnly
+      onClick={onClick}
+      placeholder={placeholder}
+      className="w-full cursor-pointer bg-transparent text-sm font-medium text-white outline-none placeholder:text-white/35"
+    />
+  )
+)
+CustomDateInput.displayName = "CustomDateInput"
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function HeroSection() {
+  const router = useRouter()
   const [travelers, setTravelers] = useState(2)
+  const [destination, setDestination] = useState("")
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const destinationRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (destinationRef.current && !destinationRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  const filteredSuggestions = SUGGESTIONS.filter((s) =>
+    destination.length === 0 || s.label.toLowerCase().includes(destination.toLowerCase())
+  )
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
+
+  const dateDisplayValue = (() => {
+    if (!startDate) return ""
+    const fmt = (d: Date) => format(d, "dd.MM.yyyy")
+    if (!endDate) return `От: ${fmt(startDate)}`
+    return `От: ${fmt(startDate)}  До: ${fmt(endDate)}`
+  })()
+
+  const handleSearch = () => {
+    const params = new URLSearchParams()
+    if (destination.trim()) params.set("query", destination.trim())
+    if (startDate) params.set("dateFrom", format(startDate, "yyyy-MM-dd"))
+    if (endDate) params.set("dateTo", format(endDate, "yyyy-MM-dd"))
+    params.set("travelers", String(travelers))
+    router.push("/destinations?" + params.toString())
+  }
+
+  const scrollToDestinations = () => {
+    document.getElementById("destinations")?.scrollIntoView({ behavior: "smooth" })
+  }
 
   // Mouse parallax
   const mouseX = useMotionValue(0)
@@ -89,12 +174,12 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative h-screen w-full overflow-hidden bg-[#0A1628]"
+      className="relative min-h-screen w-full bg-[#0A1628] md:h-screen"
       onMouseMove={handleMouseMove}
     >
       {/* ── Background: Ken Burns + Mouse Parallax ── */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 overflow-hidden"
         style={{ x: bgX, y: bgY }}
         initial={{ scale: 1.06 }}
         animate={{ scale: 1.14 }}
@@ -115,7 +200,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: -24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        className="absolute left-0 right-0 top-0 z-50 flex items-center justify-between px-8 py-6 lg:px-14"
+        className="absolute left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-4 sm:px-8 sm:py-6 lg:px-14"
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5">
@@ -131,17 +216,17 @@ export default function HeroSection() {
           </span>
         </div>
 
-        {/* Links */}
-        <div className="hidden items-center gap-8 text-sm font-medium text-white/75 md:flex">
+        {/* Links – absolutely centred so logo & button don't push them */}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm font-medium text-white/75 md:flex">
           {NAV_LINKS.map((item) => (
-            <a
-              key={item}
-              href="#"
+            <Link
+              key={item.label}
+              href={item.href}
               className="group relative transition-colors duration-200 hover:text-[#D4A853]"
             >
-              {item}
+              {item.label}
               <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#D4A853] transition-all duration-300 group-hover:w-full" />
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -156,14 +241,14 @@ export default function HeroSection() {
       </motion.nav>
 
       {/* ── Main Content ── */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center pb-28 text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4 pt-24 pb-10 text-center md:h-full md:px-0 md:pt-28 md:pb-40">
         {/* Badge */}
         <motion.div
           custom={0}
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="mb-7 flex items-center gap-3"
+          className="mb-4 flex items-center gap-3 md:mb-7"
         >
           <div className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4A853]" />
           <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4A853]">
@@ -178,7 +263,7 @@ export default function HeroSection() {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="mb-6 max-w-5xl text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[88px]"
+          className="mb-3 max-w-5xl text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl md:mb-6 md:leading-[1.04] md:text-7xl lg:text-[88px]"
           style={{ fontFamily: "var(--font-playfair)" }}
         >
           Where Every Journey
@@ -192,7 +277,7 @@ export default function HeroSection() {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="mb-10 max-w-lg text-lg leading-relaxed text-white/60 md:text-xl"
+          className="mb-5 max-w-lg text-sm leading-relaxed text-white/60 sm:text-lg md:mb-10 md:text-xl"
         >
           Tailored luxury travel experiences to the world&apos;s most
           breathtaking destinations
@@ -204,13 +289,14 @@ export default function HeroSection() {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="mb-14 flex flex-col items-center gap-4 sm:flex-row"
+          className="mb-7 flex flex-col items-center gap-3 sm:flex-row md:mb-14 md:gap-4"
         >
           {/* Primary */}
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            className="relative overflow-hidden rounded-full bg-[#D4A853] px-9 py-4 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(212,168,83,0.55)]"
+            onClick={scrollToDestinations}
+            className="relative overflow-hidden rounded-full bg-[#D4A853] px-7 py-3.5 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(212,168,83,0.55)] sm:px-9 sm:py-4"
           >
             {/* Shimmer */}
             <motion.span
@@ -231,7 +317,7 @@ export default function HeroSection() {
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-3 rounded-full border border-white/25 px-9 py-4 text-sm font-medium uppercase tracking-widest text-white transition-all duration-300 hover:border-white/50 hover:bg-white/[0.08]"
+            className="flex items-center gap-3 rounded-full border border-white/25 px-7 py-3.5 text-sm font-medium uppercase tracking-widest text-white transition-all duration-300 hover:border-white/50 hover:bg-white/[0.08] sm:px-9 sm:py-4"
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 text-[10px]">
               ▶
@@ -246,7 +332,7 @@ export default function HeroSection() {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="flex items-center gap-6 sm:gap-10"
+          className="flex items-center gap-5 sm:gap-10"
         >
           {STATS.map((stat, i) => (
             <div key={stat.label} className="flex items-center gap-6 sm:gap-10">
@@ -295,7 +381,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-        className="absolute bottom-8 left-1/2 z-20 w-full max-w-3xl -translate-x-1/2 px-4"
+        className="relative z-20 w-full px-4 pb-8 md:absolute md:bottom-8 md:left-1/2 md:max-w-4xl md:-translate-x-1/2 md:pb-0"
       >
         <div
           className="flex flex-col items-stretch gap-2 rounded-2xl p-3 md:flex-row"
@@ -307,7 +393,7 @@ export default function HeroSection() {
           }}
         >
           {/* Destination */}
-          <div className="flex flex-1 cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05]">
+          <div ref={destinationRef} className="relative flex flex-1 cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05]">
             <span className="text-[#D4A853]">✈</span>
             <div className="min-w-0 flex-1">
               <div className="mb-1 text-xs font-medium uppercase tracking-wide text-white/45">
@@ -316,24 +402,73 @@ export default function HeroSection() {
               <input
                 type="text"
                 placeholder="Where to?"
+                value={destination}
+                onChange={(e) => { setDestination(e.target.value); setShowSuggestions(true) }}
+                onFocus={() => setShowSuggestions(true)}
                 className="w-full bg-transparent text-sm font-medium text-white outline-none placeholder:text-white/35"
               />
             </div>
+
+            {/* Dropdown */}
+            {showSuggestions && filteredSuggestions.length > 0 && (
+              <div
+                className="absolute left-0 top-full z-[100] mt-2 w-full overflow-hidden rounded-2xl py-2"
+                style={{
+                  background: "rgba(10, 22, 40, 0.88)",
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  border: "1px solid rgba(212, 168, 83, 0.18)",
+                  boxShadow: "0 16px 40px rgba(0,0,0,0.5)",
+                }}
+              >
+                {filteredSuggestions.map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    onMouseDown={() => {
+                      setDestination(s.label)
+                      setShowSuggestions(false)
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors duration-150 hover:bg-white/[0.06]"
+                  >
+                    <span className="text-base text-[#D4A853]">✈</span>
+                    <div>
+                      <div className="text-sm font-medium text-white">{s.label}</div>
+                      <div className="text-xs text-white/40">{s.sub}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="my-2 hidden w-px bg-white/10 md:block" />
 
           {/* Dates */}
-          <div className="flex flex-1 cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05]">
+          <div className="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05] flex-[2] min-w-[220px]">
             <span className="text-[#D4A853]">📅</span>
-            <div className="min-w-0 flex-1">
+            <div className="flex-1 min-w-0">
               <div className="mb-1 text-xs font-medium uppercase tracking-wide text-white/45">
                 Travel Dates
               </div>
-              <input
-                type="text"
-                placeholder="Add dates"
-                className="w-full bg-transparent text-sm font-medium text-white outline-none placeholder:text-white/35"
+              <DatePicker
+                selectsRange
+                startDate={startDate}
+                endDate={endDate}
+                onChange={(dates) => {
+                  const [start, end] = dates as [Date | null, Date | null]
+                  setStartDate(start)
+                  setEndDate(end)
+                }}
+                customInput={
+                  <CustomDateInput
+                    placeholder="Изберете период"
+                    displayValue={dateDisplayValue}
+                  />
+                }
+                minDate={new Date()}
+                popperPlacement="top-start"
+                wrapperClassName="w-full"
               />
             </div>
           </div>
@@ -341,7 +476,7 @@ export default function HeroSection() {
           <div className="my-2 hidden w-px bg-white/10 md:block" />
 
           {/* Travelers */}
-          <div className="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05]">
+          <div className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05] md:w-auto">
             <span className="text-[#D4A853]">👥</span>
             <div>
               <div className="mb-1 text-xs font-medium uppercase tracking-wide text-white/45">
@@ -371,7 +506,8 @@ export default function HeroSection() {
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="whitespace-nowrap rounded-xl bg-[#D4A853] px-8 py-3.5 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-all duration-300 hover:shadow-[0_0_28px_rgba(212,168,83,0.5)]"
+            onClick={handleSearch}
+            className="w-full whitespace-nowrap rounded-xl bg-[#D4A853] px-8 py-3.5 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-all duration-300 hover:shadow-[0_0_28px_rgba(212,168,83,0.5)] md:w-auto"
           >
             Search
           </motion.button>

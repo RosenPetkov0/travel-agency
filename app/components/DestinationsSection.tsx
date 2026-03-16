@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import type { Destination } from "@/app/page"
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -41,7 +42,7 @@ const headerVariant = {
 
 export default function DestinationsSection({ destinations }: { destinations: Destination[] }) {
   return (
-    <section className="relative bg-[#0A1628] px-6 py-24 sm:px-10 lg:px-20 lg:py-32">
+    <section id="destinations" className="relative bg-[#0A1628] px-4 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
       {/* Subtle top gradient to blend with Hero */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0A1628] to-transparent" />
 
@@ -151,7 +152,10 @@ export default function DestinationsSection({ destinations }: { destinations: De
               </p>
 
               {/* Explore link */}
-              <div className="flex items-center gap-2 text-sm font-semibold text-[#D4A853] transition-all duration-300 group-hover:gap-3">
+              <Link
+                href={`/destinations/${dest.id}`}
+                className="flex items-center gap-2 text-sm font-semibold text-[#D4A853] transition-all duration-300 group-hover:gap-3"
+              >
                 <span>Explore</span>
                 <motion.span
                   className="inline-block"
@@ -160,7 +164,7 @@ export default function DestinationsSection({ destinations }: { destinations: De
                 >
                   →
                 </motion.span>
-              </div>
+              </Link>
             </div>
           </motion.div>
         ))}

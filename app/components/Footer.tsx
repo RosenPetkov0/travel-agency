@@ -55,7 +55,7 @@ export default function Footer() {
   return (
     <footer className="relative bg-[#0A1628]">
       {/* ═══════════════════ CTA / Newsletter Section ═══════════════════ */}
-      <div className="relative overflow-hidden px-6 py-24 sm:px-10 lg:px-20 lg:py-32">
+      <div className="relative overflow-hidden px-4 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
         {/* Decorative divider */}
         <div className="mx-auto mb-16 h-px max-w-xs bg-gradient-to-r from-transparent via-[#D4A853]/30 to-transparent" />
 
@@ -135,7 +135,7 @@ export default function Footer() {
 
       {/* ═══════════════════ Footer Links ═══════════════════ */}
       <div
-        className="border-t px-6 py-16 sm:px-10 lg:px-20"
+        className="border-t px-4 py-12 sm:px-10 lg:px-20"
         style={{ borderColor: "rgba(255, 255, 255, 0.06)" }}
       >
         <motion.div
@@ -143,10 +143,10 @@ export default function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="mx-auto grid max-w-6xl grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-5"
+          className="mx-auto grid max-w-6xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5"
         >
           {/* Brand Column */}
-          <motion.div variants={fadeUp} className="col-span-2 sm:col-span-1 lg:col-span-1">
+          <motion.div variants={fadeUp} className="lg:col-span-1">
             <div className="mb-5 flex items-center gap-2.5">
               <motion.span
                 animate={{ rotate: [0, 20, 0, -15, 0] }}

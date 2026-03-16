@@ -1,7 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import type { Hotel } from "@/app/page"
+
+const MotionLink = motion(Link)
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -60,7 +63,7 @@ function StarRating({ count }: { count: number }) {
 
 export default function FeaturedHotels({ hotels }: { hotels: Hotel[] }) {
   return (
-    <section className="relative bg-[#0A1628] px-6 py-24 sm:px-10 lg:px-20 lg:py-32">
+    <section className="relative bg-[#0A1628] px-4 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
       {/* Decorative divider line */}
       <div className="mx-auto mb-20 h-px max-w-xs bg-gradient-to-r from-transparent via-[#D4A853]/30 to-transparent" />
 
@@ -166,13 +169,14 @@ export default function FeaturedHotels({ hotels }: { hotels: Hotel[] }) {
               </p>
 
               {/* CTA */}
-              <motion.button
+              <MotionLink
+                href={`/hotels/${hotel.id}`}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="w-full rounded-xl border border-[#D4A853]/30 py-3 text-sm font-semibold tracking-wide text-[#D4A853] transition-all duration-300 hover:border-[#D4A853]/60 hover:bg-[#D4A853]/[0.08] hover:shadow-[0_0_20px_rgba(212,168,83,0.12)]"
+                className="block w-full rounded-xl border border-[#D4A853]/30 py-3 text-center text-sm font-semibold tracking-wide text-[#D4A853] transition-all duration-300 hover:border-[#D4A853]/60 hover:bg-[#D4A853]/[0.08] hover:shadow-[0_0_20px_rgba(212,168,83,0.12)]"
               >
                 View Details
-              </motion.button>
+              </MotionLink>
             </div>
           </motion.div>
         ))}
