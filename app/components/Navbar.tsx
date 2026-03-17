@@ -35,7 +35,7 @@ export default function Navbar() {
         initial={{ opacity: 0, y: -24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        className="absolute left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-4 sm:px-8 sm:py-6 lg:px-14"
+        className="absolute left-0 top-0 z-[100] flex w-full items-center justify-between px-6 py-8"
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
@@ -78,7 +78,7 @@ export default function Navbar() {
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label={isOpen ? "Close menu" : "Open menu"}
-          className="relative z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 text-white transition-colors duration-200 hover:border-[#D4A853]/50 hover:text-[#D4A853] md:hidden"
+          className="relative z-[110] flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 text-white transition-colors duration-200 hover:border-[#D4A853]/50 hover:text-[#D4A853] md:hidden"
           style={{
             background: "rgba(10, 22, 40, 0.45)",
             backdropFilter: "blur(12px)",
@@ -86,8 +86,8 @@ export default function Navbar() {
           }}
         >
           <svg
-            width="20"
-            height="20"
+            width="28"
+            height="28"
             viewBox="0 0 20 20"
             fill="none"
             stroke="currentColor"

@@ -192,7 +192,7 @@ export default function HeroSection() {
       <Navbar />
 
       {/* ── Main Content ── */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-4 pt-36 pb-10 text-center md:px-0 md:pt-40 md:pb-40 lg:min-h-screen">
+      <div className="relative z-10 flex flex-col items-center justify-start px-4 pt-40 pb-20 text-center md:px-0 md:pt-48 md:pb-40 lg:min-h-screen">
         {/* Badge */}
         <motion.div
           custom={0}
