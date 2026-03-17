@@ -65,14 +65,25 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTA */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.96 }}
-          className="hidden rounded-full border border-[#D4A853]/70 px-6 py-2.5 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628] md:block"
-        >
-          Book Now
-        </motion.button>
+        {/* Desktop CTAs */}
+        <div className="hidden items-center gap-3 md:flex">
+          <Link href="/login">
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.96 }}
+              className="inline-block rounded-full px-5 py-2.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-[#D4A853]"
+            >
+              Sign In
+            </motion.span>
+          </Link>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.96 }}
+            className="rounded-full border border-[#D4A853]/70 px-6 py-2.5 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628]"
+          >
+            Book Now
+          </motion.button>
+        </div>
 
         {/* Mobile hamburger button */}
         <button
@@ -178,12 +189,28 @@ export default function Navbar() {
                 {/* Divider */}
                 <div className="mx-4 my-2 h-px bg-white/10" />
 
-                {/* Book Now mobile */}
+                {/* Sign In mobile */}
                 <motion.div
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
-                  className="px-2 pb-2"
+                >
+                  <Link
+                    href="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium text-[#D4A853]/80 transition-all duration-200 hover:bg-white/[0.07] hover:text-[#D4A853]"
+                  >
+                    <span className="text-[#D4A853]/60 text-xs">→</span>
+                    Sign In
+                  </Link>
+                </motion.div>
+
+                {/* Book Now mobile */}
+                <motion.div
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.05 + (NAV_LINKS.length + 1) * 0.06, duration: 0.3 }}
+                  className="px-2 pb-2 pt-1"
                 >
                   <button className="w-full rounded-xl border border-[#D4A853]/70 py-3 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628]">
                     Book Now
