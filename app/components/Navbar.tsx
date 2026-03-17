@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/utils/supabase-browser"
 
 const NAV_LINKS = [
   { label: "Destinations", href: "/destinations" },
@@ -12,9 +14,33 @@ const NAV_LINKS = [
 ]
 
 export default function Navbar() {
+  const router = useRouter()
+  const supabase = createClient()
   const [isOpen, setIsOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  // Close menu on route change / resize to desktop
+  // Sync auth state
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setIsLoggedIn(!!data.user)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session?.user)
+    })
+
+    return () => subscription.unsubscribe()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    setIsOpen(false)
+    router.push("/")
+    router.refresh()
+  }
+
+  // Close menu on resize to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) setIsOpen(false)
@@ -67,22 +93,46 @@ export default function Navbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden items-center gap-3 md:flex">
-          <Link href="/login">
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.96 }}
-              className="inline-block rounded-full border border-[#D4A853] px-5 py-2.5 text-sm font-semibold text-[#D4A853] transition-colors duration-200 hover:bg-[#D4A853]/10"
-            >
-              Sign In
-            </motion.span>
-          </Link>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.96 }}
-            className="rounded-full border border-[#D4A853]/70 px-6 py-2.5 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628]"
-          >
-            Book Now
-          </motion.button>
+          {isLoggedIn ? (
+            <>
+              <Link href="/dashboard">
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="inline-block rounded-full px-5 py-2.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-[#D4A853]"
+                >
+                  Dashboard
+                </motion.span>
+              </Link>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={handleSignOut}
+                className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-white/60 transition-all duration-200 hover:border-white/40 hover:text-white"
+              >
+                Sign Out
+              </motion.button>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.96 }}
+                  className="inline-block rounded-full border border-[#D4A853] px-5 py-2.5 text-sm font-semibold text-[#D4A853] transition-colors duration-200 hover:bg-[#D4A853]/10"
+                >
+                  Sign In
+                </motion.span>
+              </Link>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.96 }}
+                className="rounded-full border border-[#D4A853]/70 px-6 py-2.5 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628]"
+              >
+                Book Now
+              </motion.button>
+            </>
+          )}
         </div>
 
         {/* Mobile hamburger button */}
@@ -189,34 +239,70 @@ export default function Navbar() {
                 {/* Divider */}
                 <div className="mx-4 my-2 h-px bg-white/10" />
 
-                {/* Sign In mobile */}
-                <motion.div
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
-                >
-                  <div className="px-2 pt-1">
-                    <Link
-                      href="/login"
-                      onClick={() => setIsOpen(false)}
-                      className="flex w-full items-center justify-center rounded-xl border border-[#D4A853]/70 py-3 text-sm font-semibold text-[#D4A853] transition-all duration-200 hover:bg-[#D4A853]/10"
+                {isLoggedIn ? (
+                  <>
+                    {/* Dashboard mobile */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
                     >
-                      Sign In
-                    </Link>
-                  </div>
-                </motion.div>
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium text-white/80 transition-all duration-200 hover:bg-white/[0.07] hover:text-[#D4A853]"
+                      >
+                        <span className="text-[#D4A853]/60 text-xs">✦</span>
+                        Dashboard
+                      </Link>
+                    </motion.div>
 
-                {/* Book Now mobile */}
-                <motion.div
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + (NAV_LINKS.length + 1) * 0.06, duration: 0.3 }}
-                  className="px-2 pb-2 pt-1"
-                >
-                  <button className="w-full rounded-xl border border-[#D4A853]/70 py-3 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628]">
-                    Book Now
-                  </button>
-                </motion.div>
+                    {/* Sign Out mobile */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + (NAV_LINKS.length + 1) * 0.06, duration: 0.3 }}
+                      className="px-2 pb-2 pt-1"
+                    >
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full rounded-xl border border-white/15 py-3 text-sm font-semibold text-white/60 transition-all duration-300 hover:border-white/30 hover:text-white"
+                      >
+                        Sign Out
+                      </button>
+                    </motion.div>
+                  </>
+                ) : (
+                  <>
+                    {/* Sign In mobile */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
+                      className="px-2 pt-1"
+                    >
+                      <Link
+                        href="/login"
+                        onClick={() => setIsOpen(false)}
+                        className="flex w-full items-center justify-center rounded-xl border border-[#D4A853]/70 py-3 text-sm font-semibold text-[#D4A853] transition-all duration-200 hover:bg-[#D4A853]/10"
+                      >
+                        Sign In
+                      </Link>
+                    </motion.div>
+
+                    {/* Book Now mobile */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + (NAV_LINKS.length + 1) * 0.06, duration: 0.3 }}
+                      className="px-2 pb-2 pt-1"
+                    >
+                      <button className="w-full rounded-xl border border-[#D4A853]/70 py-3 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628]">
+                        Book Now
+                      </button>
+                    </motion.div>
+                  </>
+                )}
               </nav>
             </motion.div>
           </>

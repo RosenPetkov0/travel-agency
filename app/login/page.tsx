@@ -51,7 +51,7 @@ export default function LoginPage() {
       } else {
         const { error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
-        setSuccess("Check your email to confirm your account.")
+        setSuccess("Success! Please check your email to confirm your account.")
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred.")
