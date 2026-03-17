@@ -71,7 +71,7 @@ export default function Navbar() {
             <motion.span
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
-              className="inline-block rounded-full px-5 py-2.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-[#D4A853]"
+              className="inline-block rounded-full border border-[#D4A853] px-5 py-2.5 text-sm font-semibold text-[#D4A853] transition-colors duration-200 hover:bg-[#D4A853]/10"
             >
               Sign In
             </motion.span>
@@ -195,14 +195,15 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
                 >
-                  <Link
-                    href="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium text-[#D4A853]/80 transition-all duration-200 hover:bg-white/[0.07] hover:text-[#D4A853]"
-                  >
-                    <span className="text-[#D4A853]/60 text-xs">→</span>
-                    Sign In
-                  </Link>
+                  <div className="px-2 pt-1">
+                    <Link
+                      href="/login"
+                      onClick={() => setIsOpen(false)}
+                      className="flex w-full items-center justify-center rounded-xl border border-[#D4A853]/70 py-3 text-sm font-semibold text-[#D4A853] transition-all duration-200 hover:bg-[#D4A853]/10"
+                    >
+                      Sign In
+                    </Link>
+                  </div>
                 </motion.div>
 
                 {/* Book Now mobile */}
