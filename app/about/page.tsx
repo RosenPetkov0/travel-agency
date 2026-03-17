@@ -3,7 +3,6 @@
 import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
-import Image from "next/image"
 import Link from "next/link"
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
@@ -26,38 +25,37 @@ const stagger = {
 
 const FOUNDERS = [
   {
-    name: "Ivayla Boycheva",
-    role: "Founder & CEO",
-    bio: "The visionary behind Lumière Travel. Her dynamic spirit, fueled by a passion for Formula 1 and traditional folk dancing, inspires her to curate fast-paced, unforgettable, and culturally rich luxury experiences around the globe.",
-    instagram: "https://www.instagram.com/ivayla_boycheva/",
-    photo: "/images/ivayla.png",
-    initials: "IB",
+    name: "Alexander Reed",
+    role: "Chief Executive Officer",
+    bio: "With over two decades in luxury hospitality, Alexander leads our vision to redefine premium travel experiences through cutting-edge digital solutions.",
+    linkedin: "https://linkedin.com",
+    initials: "AR",
   },
   {
-    name: "Rosen Petkov",
-    role: "CTO & Lead Developer",
-    bio: "The technical architect who turned the dream of Lumière Travel into a digital reality. Sharing a love for F1 and folk dancing, he brings rhythm, speed, and absolute precision to the platform's elegant code.",
-    instagram: "https://www.instagram.com/rosen_petkov57/",
-    photo: "/images/rosen.png",
-    initials: "RP",
+    name: "Elena Rostova",
+    role: "Chief Technology Officer",
+    bio: "Architecting the future of travel. Elena ensures our platform delivers flawless performance, top-tier security, and seamless booking flows.",
+    linkedin: "https://linkedin.com",
+    initials: "ER",
   },
 ]
 
 const VALUES = [
   { icon: "✦", label: "Precision", desc: "Every itinerary is engineered to perfection, with no detail left to chance." },
-  { icon: "◈", label: "Passion", desc: "From the racetrack to the dance floor — we bring genuine enthusiasm to every journey." },
+  { icon: "◈", label: "Innovation", desc: "We continuously push the boundaries of travel technology to deliver smarter, faster, and more elegant solutions." },
   { icon: "◉", label: "Elegance", desc: "Luxury is not excess. It is the art of experiencing the world at its very finest." },
 ]
 
-// ─── Instagram Icon ───────────────────────────────────────────────────────────
+// ─── LinkedIn Icon ────────────────────────────────────────────────────────────
 
-function InstagramIcon() {
+function LinkedInIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
       strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+      <rect x="2" y="2" width="20" height="20" rx="4" ry="4" />
+      <line x1="8" y1="11" x2="8" y2="17" />
+      <line x1="8" y1="8" x2="8" y2="8.5" />
+      <path d="M12 11v6M12 14a3 3 0 0 1 6 0v3" />
     </svg>
   )
 }
@@ -70,7 +68,7 @@ function AboutContent() {
 
   const [message, setMessage] = useState(
     locationName
-      ? `Здравейте, интересувам се от резервация за ${locationName}. Моля, свържете се с мен за повече подробности.`
+      ? `Hello, I am interested in booking for ${locationName}. Please get in touch with me for more details.`
       : ""
   )
 
@@ -101,22 +99,22 @@ function AboutContent() {
         <motion.div custom={0} variants={fadeUp} initial="hidden" animate="visible"
           className="mb-6 flex items-center gap-3">
           <div className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4A853]" />
-          <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4A853]">Our Story</span>
+          <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4A853]">Our Platform</span>
           <div className="h-px w-10 bg-gradient-to-l from-transparent to-[#D4A853]" />
         </motion.div>
 
         <motion.h1 custom={1} variants={fadeUp} initial="hidden" animate="visible"
           className="relative mb-6 max-w-4xl text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl"
           style={{ fontFamily: "var(--font-playfair)" }}>
-          Behind the Magic of
+          Premium Travel Technology
           <br />
-          <em className="not-italic text-[#D4A853]">Lumière Travel</em>
+          <em className="not-italic text-[#D4A853]">Built to Scale</em>
         </motion.h1>
 
         <motion.p custom={2} variants={fadeUp} initial="hidden" animate="visible"
           className="max-w-xl text-base leading-relaxed text-white/50 sm:text-lg">
-          Born from an obsession with the extraordinary — we craft luxury travel experiences
-          that move as fast as a Formula 1 car and feel as alive as a folk dance at midnight.
+          We build white-label luxury travel platforms that empower agencies to deliver
+          world-class booking experiences — with enterprise-grade performance and zero compromise on design.
         </motion.p>
 
         <motion.div variants={stagger} initial="hidden" animate="visible"
@@ -148,12 +146,12 @@ function AboutContent() {
           viewport={{ once: true, amount: 0.4 }} className="mb-14 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
             <div className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4A853]" />
-            <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4A853]">The Founders</span>
+            <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4A853]">Leadership Team</span>
             <div className="h-px w-10 bg-gradient-to-l from-transparent to-[#D4A853]" />
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl"
             style={{ fontFamily: "var(--font-playfair)" }}>
-            The People Behind the{" "}
+            The People Driving the{" "}
             <em className="not-italic text-[#D4A853]">Vision</em>
           </h2>
         </motion.div>
@@ -177,16 +175,10 @@ function AboutContent() {
               {/* Avatar */}
               <div className="mb-6 flex items-center gap-5">
                 <div
-                  className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-full"
-                  style={{ border: "2px solid rgba(212,168,83,0.45)", boxShadow: "0 0 0 4px rgba(212,168,83,0.08)" }}
+                  className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full text-xl font-bold text-[#D4A853]"
+                  style={{ border: "2px solid rgba(212,168,83,0.45)", boxShadow: "0 0 0 4px rgba(212,168,83,0.08)", background: "rgba(212,168,83,0.07)" }}
                 >
-                  <Image
-                    src={f.photo}
-                    alt={f.name}
-                    fill
-                    className="object-cover"
-                    sizes="80px"
-                  />
+                  {f.initials}
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">{f.name}</h3>
@@ -202,12 +194,12 @@ function AboutContent() {
               {/* Bio */}
               <p className="mb-7 text-sm leading-[1.8] text-white/55">{f.bio}</p>
 
-              {/* Instagram */}
-              <a href={f.instagram} target="_blank" rel="noopener noreferrer"
+              {/* LinkedIn */}
+              <a href={f.linkedin} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs font-semibold text-white/60 transition-all duration-300 hover:text-[#D4A853]"
                 style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <InstagramIcon />
-                Follow on Instagram
+                <LinkedInIcon />
+                LinkedIn Profile
               </a>
             </motion.div>
           ))}
