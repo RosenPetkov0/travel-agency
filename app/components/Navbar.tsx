@@ -18,15 +18,21 @@ export default function Navbar() {
   const supabase = createClient()
   const [isOpen, setIsOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  const syncUser = async (userId: string | undefined) => {
+    if (!userId) { setIsLoggedIn(false); setIsAdmin(false); return }
+    setIsLoggedIn(true)
+    const { data } = await supabase.from("profiles").select("role").eq("id", userId).single()
+    setIsAdmin(data?.role === "admin")
+  }
 
   // Sync auth state
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setIsLoggedIn(!!data.user)
-    })
+    supabase.auth.getUser().then(({ data }) => syncUser(data.user?.id))
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session?.user)
+      syncUser(session?.user?.id)
     })
 
     return () => subscription.unsubscribe()
@@ -95,6 +101,17 @@ export default function Navbar() {
         <div className="hidden items-center gap-3 md:flex">
           {isLoggedIn ? (
             <>
+              {isAdmin && (
+                <Link href="/admin">
+                  <motion.span
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.96 }}
+                    className="inline-block rounded-full bg-[#D4A853]/10 border border-[#D4A853]/60 px-5 py-2.5 text-sm font-semibold text-[#D4A853] transition-all duration-200 hover:bg-[#D4A853]/20"
+                  >
+                    Admin Panel
+                  </motion.span>
+                </Link>
+              )}
               <Link href="/dashboard">
                 <motion.span
                   whileHover={{ scale: 1.05 }}
@@ -241,11 +258,29 @@ export default function Navbar() {
 
                 {isLoggedIn ? (
                   <>
+                    {/* Admin Panel mobile – only for admins */}
+                    {isAdmin && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
+                      >
+                        <Link
+                          href="/admin"
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-semibold text-[#D4A853] transition-all duration-200 hover:bg-[#D4A853]/10"
+                        >
+                          <span className="text-[#D4A853]/60 text-xs">◈</span>
+                          Admin Panel
+                        </Link>
+                      </motion.div>
+                    )}
+
                     {/* Dashboard mobile */}
                     <motion.div
                       initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
+                      transition={{ delay: 0.05 + (NAV_LINKS.length + (isAdmin ? 1 : 0)) * 0.06, duration: 0.3 }}
                     >
                       <Link
                         href="/dashboard"
@@ -261,7 +296,7 @@ export default function Navbar() {
                     <motion.div
                       initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 + (NAV_LINKS.length + 1) * 0.06, duration: 0.3 }}
+                      transition={{ delay: 0.05 + (NAV_LINKS.length + (isAdmin ? 2 : 1)) * 0.06, duration: 0.3 }}
                       className="px-2 pb-2 pt-1"
                     >
                       <button
