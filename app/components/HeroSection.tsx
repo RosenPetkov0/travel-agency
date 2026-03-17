@@ -3,22 +3,15 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { useState, useRef, useEffect, forwardRef } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import DatePicker from "react-datepicker"
 import { format } from "date-fns"
 import "react-datepicker/dist/react-datepicker.css"
+import Navbar from "./Navbar"
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const HERO_BG =
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80"
-
-const NAV_LINKS = [
-  { label: "Destinations", href: "/destinations" },
-  { label: "Experiences", href: "/experiences" },
-  { label: "Packages", href: "/packages" },
-  { label: "About", href: "/about" },
-]
 
 const SUGGESTIONS = [
   { label: "Monaco Grand Prix", sub: "French Riviera · F1" },
@@ -174,7 +167,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative min-h-screen w-full bg-[#0A1628] md:h-screen"
+      className="relative min-h-screen w-full bg-[#0A1628]"
       onMouseMove={handleMouseMove}
     >
       {/* ── Background: Ken Burns + Mouse Parallax ── */}
@@ -196,52 +189,10 @@ export default function HeroSection() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0A1628]/50 to-transparent" />
 
       {/* ── Navbar ── */}
-      <motion.nav
-        initial={{ opacity: 0, y: -24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        className="absolute left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-4 sm:px-8 sm:py-6 lg:px-14"
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-2.5">
-          <motion.span
-            animate={{ rotate: [0, 20, 0, -15, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="text-xl text-[#D4A853]"
-          >
-            ✦
-          </motion.span>
-          <span className="text-xl font-semibold tracking-wide text-white">
-            Lumière Travel
-          </span>
-        </div>
-
-        {/* Links – absolutely centred so logo & button don't push them */}
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm font-medium text-white/75 md:flex">
-          {NAV_LINKS.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="group relative transition-colors duration-200 hover:text-[#D4A853]"
-            >
-              {item.label}
-              <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#D4A853] transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.96 }}
-          className="hidden rounded-full border border-[#D4A853]/70 px-6 py-2.5 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628] md:block"
-        >
-          Book Now
-        </motion.button>
-      </motion.nav>
+      <Navbar />
 
       {/* ── Main Content ── */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-4 pt-24 pb-10 text-center md:h-full md:px-0 md:pt-28 md:pb-40">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4 pt-36 pb-10 text-center md:px-0 md:pt-40 md:pb-40 lg:min-h-screen">
         {/* Badge */}
         <motion.div
           custom={0}

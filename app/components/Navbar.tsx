@@ -1,0 +1,199 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link"
+
+const NAV_LINKS = [
+  { label: "Destinations", href: "/destinations" },
+  { label: "Experiences", href: "/experiences" },
+  { label: "Packages", href: "/packages" },
+  { label: "About", href: "/about" },
+]
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  // Close menu on route change / resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setIsOpen(false)
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : ""
+    return () => { document.body.style.overflow = "" }
+  }, [isOpen])
+
+  return (
+    <>
+      <motion.nav
+        initial={{ opacity: 0, y: -24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="absolute left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-4 sm:px-8 sm:py-6 lg:px-14"
+      >
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5">
+          <motion.span
+            animate={{ rotate: [0, 20, 0, -15, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="text-xl text-[#D4A853]"
+          >
+            ✦
+          </motion.span>
+          <span className="text-xl font-semibold tracking-wide text-white">
+            Lumière Travel
+          </span>
+        </Link>
+
+        {/* Desktop links – absolutely centred */}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm font-medium text-white/75 md:flex">
+          {NAV_LINKS.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="group relative transition-colors duration-200 hover:text-[#D4A853]"
+            >
+              {item.label}
+              <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#D4A853] transition-all duration-300 group-hover:w-full" />
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop CTA */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.96 }}
+          className="hidden rounded-full border border-[#D4A853]/70 px-6 py-2.5 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628] md:block"
+        >
+          Book Now
+        </motion.button>
+
+        {/* Mobile hamburger button */}
+        <button
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          className="relative z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 text-white transition-colors duration-200 hover:border-[#D4A853]/50 hover:text-[#D4A853] md:hidden"
+          style={{
+            background: "rgba(10, 22, 40, 0.45)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+          }}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {isOpen ? (
+                <motion.g
+                  key="close"
+                  initial={{ opacity: 0, rotate: -45 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 45 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <line x1="4" y1="4" x2="16" y2="16" />
+                  <line x1="16" y1="4" x2="4" y2="16" />
+                </motion.g>
+              ) : (
+                <motion.g
+                  key="burger"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <line x1="3" y1="6" x2="17" y2="6" />
+                  <line x1="3" y1="10" x2="17" y2="10" />
+                  <line x1="3" y1="14" x2="17" y2="14" />
+                </motion.g>
+              )}
+            </AnimatePresence>
+          </svg>
+        </button>
+      </motion.nav>
+
+      {/* Mobile dropdown menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 z-40 md:hidden"
+              style={{ background: "rgba(10, 22, 40, 0.6)", backdropFilter: "blur(4px)" }}
+            />
+
+            {/* Panel */}
+            <motion.div
+              key="panel"
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="fixed left-4 right-4 top-[72px] z-50 overflow-hidden rounded-2xl md:hidden"
+              style={{
+                background: "rgba(10, 22, 40, 0.82)",
+                backdropFilter: "blur(28px)",
+                WebkitBackdropFilter: "blur(28px)",
+                border: "1px solid rgba(212, 168, 83, 0.2)",
+                boxShadow: "0 24px 60px rgba(0,0,0,0.55)",
+              }}
+            >
+              <nav className="flex flex-col px-2 py-3">
+                {NAV_LINKS.map((item, i) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + i * 0.06, duration: 0.3 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium text-white/80 transition-all duration-200 hover:bg-white/[0.07] hover:text-[#D4A853]"
+                    >
+                      <span className="text-[#D4A853]/60 text-xs">✦</span>
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+
+                {/* Divider */}
+                <div className="mx-4 my-2 h-px bg-white/10" />
+
+                {/* Book Now mobile */}
+                <motion.div
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.05 + NAV_LINKS.length * 0.06, duration: 0.3 }}
+                  className="px-2 pb-2"
+                >
+                  <button className="w-full rounded-xl border border-[#D4A853]/70 py-3 text-sm font-semibold text-[#D4A853] transition-all duration-300 hover:bg-[#D4A853] hover:text-[#0A1628]">
+                    Book Now
+                  </button>
+                </motion.div>
+              </nav>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
