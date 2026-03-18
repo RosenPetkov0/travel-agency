@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { createClient } from "@/utils/supabase-browser"
+import { createClient } from "@/utils/supabase/client"
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 

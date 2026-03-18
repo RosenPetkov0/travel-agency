@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { createClient } from "@/utils/supabase-server"
+import { createClient } from "@/utils/supabase/server"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()

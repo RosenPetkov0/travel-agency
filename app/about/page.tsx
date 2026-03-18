@@ -2,8 +2,9 @@
 
 import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import { createClient } from "@/utils/supabase/client"
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 
@@ -66,11 +67,47 @@ function AboutContent() {
   const searchParams = useSearchParams()
   const locationName = searchParams.get("location")
 
+  const supabase = createClient()
+
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
   const [message, setMessage] = useState(
     locationName
       ? `Hello, I am interested in booking for ${locationName}. Please get in touch with me for more details.`
       : ""
   )
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setSuccess(null)
+    setLoading(true)
+
+    try {
+      const { error: insertError } = await supabase.from("inquiries").insert({
+        name: name.trim(),
+        email: email.trim(),
+        message: message.trim(),
+        location: locationName ?? null,
+      })
+
+      if (insertError) throw insertError
+
+      setSuccess("Message sent successfully! We will get back to you shortly.")
+      setName("")
+      setEmail("")
+      setMessage("")
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : "Failed to send message. Please try again."
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[#0A1628]">
@@ -237,49 +274,96 @@ function AboutContent() {
         </motion.div>
 
         <motion.form variants={stagger} initial="hidden" whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }} onSubmit={(e) => e.preventDefault()}
+          viewport={{ once: true, amount: 0.2 }} onSubmit={handleSubmit}
           className="flex flex-col gap-5">
 
           {/* Name */}
           <motion.div variants={fadeUp} className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold uppercase tracking-[0.25em] text-white/40">Name</label>
-            <input type="text" placeholder="Your full name"
+            <input
+              type="text"
+              required
+              placeholder="Your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full rounded-xl bg-transparent px-5 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
               style={{ border: "1px solid rgba(255,255,255,0.1)" }}
               onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(212,168,83,0.45)")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")} />
+              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+            />
           </motion.div>
 
           {/* Email */}
           <motion.div variants={fadeUp} className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold uppercase tracking-[0.25em] text-white/40">Email</label>
-            <input type="email" required placeholder="your@email.com"
+            <input
+              type="email"
+              required
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-xl bg-transparent px-5 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
               style={{ border: "1px solid rgba(255,255,255,0.1)" }}
               onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(212,168,83,0.45)")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")} />
+              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+            />
           </motion.div>
 
-          {/* Message – controlled, pre-filled from URL param */}
+          {/* Message */}
           <motion.div variants={fadeUp} className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold uppercase tracking-[0.25em] text-white/40">Message</label>
-            <textarea rows={5} value={message} onChange={(e) => setMessage(e.target.value)}
+            <textarea
+              rows={5}
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Tell us about your dream journey..."
               className="w-full resize-none rounded-xl bg-transparent px-5 py-3.5 text-sm text-white outline-none placeholder:text-white/25"
               style={{ border: "1px solid rgba(255,255,255,0.1)" }}
               onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(212,168,83,0.45)")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")} />
+              onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")}
+            />
           </motion.div>
+
+          {/* Feedback messages */}
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="rounded-xl px-4 py-3 text-xs text-red-300"
+                style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
+              >
+                {error}
+              </motion.p>
+            )}
+            {success && (
+              <motion.p
+                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="rounded-xl px-4 py-3 text-xs text-emerald-300"
+                style={{ background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.2)" }}
+              >
+                {success}
+              </motion.p>
+            )}
+          </AnimatePresence>
 
           {/* Submit */}
           <motion.div variants={fadeUp}>
-            <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} type="submit"
-              className="relative w-full overflow-hidden rounded-full bg-[#D4A853] py-4 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(212,168,83,0.5)]">
-              <motion.span
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent"
-                initial={{ x: "-110%" }} animate={{ x: "210%" }}
-                transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }} />
-              <span className="relative">Send Message</span>
+            <motion.button
+              whileHover={{ scale: loading ? 1 : 1.03 }}
+              whileTap={{ scale: loading ? 1 : 0.97 }}
+              type="submit"
+              disabled={loading}
+              className="relative w-full overflow-hidden rounded-full bg-[#D4A853] py-4 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(212,168,83,0.5)] disabled:opacity-60"
+            >
+              {!loading && (
+                <motion.span
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent"
+                  initial={{ x: "-110%" }} animate={{ x: "210%" }}
+                  transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                />
+              )}
+              <span className="relative">{loading ? "Sending…" : "Send Message"}</span>
             </motion.button>
           </motion.div>
         </motion.form>

@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(cd:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm install:*)",
+      "Bash(find /d/github/Git/travel-agency -maxdepth 3 -not -path */node_modules/* -not -path */.next/* -not -path */.git/* -type d)"
     ]
   }
 }

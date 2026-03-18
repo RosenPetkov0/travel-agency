@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/utils/supabase-browser"
+import { createClient } from "@/utils/supabase/client"
 
 const NAV_LINKS = [
   { label: "Destinations", href: "/destinations" },
