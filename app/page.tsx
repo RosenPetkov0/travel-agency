@@ -1,6 +1,11 @@
 import HeroSection from "./components/HeroSection"
+import TravelCategories from "./components/TravelCategories"
 import DestinationsSection from "./components/DestinationsSection"
 import FeaturedHotels from "./components/FeaturedHotels"
+import WhyChooseUs from "./components/WhyChooseUs"
+import FeaturedExperiences from "./components/FeaturedExperiences"
+import Testimonials from "./components/Testimonials"
+import Newsletter from "./components/Newsletter"
 import Footer from "./components/Footer"
 
 // ─── Shared types ─────────────────────────────────────────────────────────────
@@ -56,10 +61,15 @@ export default async function Home() {
   ])
 
   return (
-    <main className="min-h-screen bg-slate-900">
+    <main className="min-h-screen bg-[#0A1628]">
       <HeroSection />
+      <TravelCategories />
       <DestinationsSection destinations={destinations} />
       <FeaturedHotels hotels={hotels} />
+      <WhyChooseUs />
+      <FeaturedExperiences />
+      <Testimonials />
+      <Newsletter />
       <Footer />
     </main>
   )

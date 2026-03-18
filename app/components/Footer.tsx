@@ -1,52 +1,79 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 
-// ─── Footer Link Columns ──────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
-const FOOTER_COLUMNS = [
-  {
-    title: "Destinations",
-    links: ["Maldives", "Kyoto", "Santorini", "Bali", "Swiss Alps"],
-  },
-  {
-    title: "Hotels",
-    links: ["Luxury Resorts", "Boutique Hotels", "Private Villas", "Spa Retreats"],
-  },
-  {
-    title: "About",
-    links: ["Our Story", "Team", "Careers", "Press", "Partners"],
-  },
-  {
-    title: "Contact",
-    links: ["Help Center", "Live Chat", "Email Us", "Locations"],
-  },
+const DESTINATIONS_LINKS = [
+  { label: "Monaco",    href: "/destinations?category=formula-1" },
+  { label: "Maldives",  href: "/destinations?category=beach-islands" },
+  { label: "Santorini", href: "/destinations?category=beach-islands" },
+  { label: "Kyoto",     href: "/destinations?category=cultural-heritage" },
+]
+
+const COMPANY_LINKS = [
+  { label: "About Us",     href: "/about" },
+  { label: "Experiences",  href: "/experiences" },
+  { label: "Packages",     href: "/packages" },
+  { label: "Contact",      href: "/about#contact" },
 ]
 
 const SOCIALS = [
-  { label: "Instagram", icon: "📸" },
-  { label: "Twitter", icon: "𝕏" },
-  { label: "Facebook", icon: "🌐" },
-  { label: "Pinterest", icon: "📌" },
+  {
+    label: "Instagram",
+    href: "#",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    label: "Twitter / X",
+    href: "#",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Facebook",
+    href: "#",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Pinterest",
+    href: "#",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+        <path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.03-2.83.19-.77 1.27-5.36 1.27-5.36s-.32-.65-.32-1.6c0-1.5.87-2.62 1.95-2.62.92 0 1.37.69 1.37 1.52 0 .93-.59 2.31-.9 3.6-.25 1.07.53 1.94 1.59 1.94 1.9 0 3.18-2.44 3.18-5.33 0-2.19-1.47-3.83-4.12-3.83-3.01 0-4.9 2.25-4.9 4.77 0 .87.26 1.47.66 1.94.18.22.21.31.14.56-.05.18-.16.62-.2.79-.07.25-.28.34-.51.25-1.41-.58-2.07-2.13-2.07-3.88 0-2.9 2.45-6.41 7.31-6.41 3.91 0 6.47 2.84 6.47 5.88 0 4.03-2.23 7.06-5.51 7.06-1.1 0-2.14-.59-2.5-1.26l-.68 2.62c-.25.93-.91 2.1-1.36 2.81.52.16 1.06.24 1.62.24 5.52 0 10-4.48 10-10S17.52 2 12 2z" />
+      </svg>
+    ),
+  },
 ]
 
-// ─── Animation Variants ───────────────────────────────────────────────────────
+// ─── Animation variants ───────────────────────────────────────────────────────
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const },
+    transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] as const },
   },
 }
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
-  },
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -54,99 +81,22 @@ const staggerContainer = {
 export default function Footer() {
   return (
     <footer className="relative bg-[#0A1628]">
-      {/* ═══════════════════ CTA / Newsletter Section ═══════════════════ */}
-      <div className="relative overflow-hidden px-4 py-16 sm:px-10 sm:py-24 lg:px-20 lg:py-32">
-        {/* Decorative divider */}
-        <div className="mx-auto mb-16 h-px max-w-xs bg-gradient-to-r from-transparent via-[#D4A853]/30 to-transparent" />
+      {/* Top shimmer line */}
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D4A853]/20 to-transparent" />
 
-        {/* Background glow */}
-        <div
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{
-            width: "600px",
-            height: "400px",
-            background:
-              "radial-gradient(ellipse, rgba(212, 168, 83, 0.06) 0%, transparent 70%)",
-          }}
-        />
-
+      {/* ── Main columns ── */}
+      <div className="px-4 py-16 sm:px-8 lg:px-14 lg:py-20">
         <motion.div
-          variants={fadeUp}
+          variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.4 }}
-          className="relative z-10 mx-auto max-w-2xl text-center"
+          viewport={{ once: true, amount: 0.15 }}
+          className="mx-auto grid max-w-6xl grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4"
         >
-          {/* Badge */}
-          <div className="mb-6 flex items-center justify-center gap-3">
-            <div className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4A853]" />
-            <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4A853]">
-              Stay Connected
-            </span>
-            <div className="h-px w-10 bg-gradient-to-l from-transparent to-[#D4A853]" />
-          </div>
 
-          <h2
-            className="mb-4 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
-            Ready for Your Next
-            <br />
-            <em className="not-italic text-[#D4A853]">Adventure?</em>
-          </h2>
-
-          <p className="mb-10 text-base leading-relaxed text-white/50 md:text-lg">
-            Subscribe to receive exclusive offers, curated itineraries, and
-            insider tips from our travel specialists
-          </p>
-
-          {/* Email Input */}
-          <div
-            className="mx-auto flex max-w-md flex-col gap-3 rounded-2xl p-2.5 sm:flex-row"
-            style={{
-              background: "rgba(10, 22, 40, 0.65)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-            }}
-          >
-            <div className="flex flex-1 items-center gap-3 rounded-xl px-4 py-3">
-              <span className="text-sm text-[#D4A853]">✉</span>
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className="w-full bg-transparent text-sm font-medium text-white outline-none placeholder:text-white/30"
-              />
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="whitespace-nowrap rounded-xl bg-[#D4A853] px-7 py-3.5 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-all duration-300 hover:shadow-[0_0_30px_rgba(212,168,83,0.45)]"
-            >
-              Subscribe
-            </motion.button>
-          </div>
-
-          <p className="mt-4 text-xs text-white/25">
-            No spam. Unsubscribe anytime. Your data is safe with us.
-          </p>
-        </motion.div>
-      </div>
-
-      {/* ═══════════════════ Footer Links ═══════════════════ */}
-      <div
-        className="border-t px-4 py-12 sm:px-10 lg:px-20"
-        style={{ borderColor: "rgba(255, 255, 255, 0.06)" }}
-      >
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="mx-auto grid max-w-6xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5"
-        >
-          {/* Brand Column */}
-          <motion.div variants={fadeUp} className="lg:col-span-1">
+          {/* ── Column 1: Brand ── */}
+          <motion.div variants={fadeUp} className="sm:col-span-2 lg:col-span-1">
+            {/* Logo */}
             <div className="mb-5 flex items-center gap-2.5">
               <motion.span
                 animate={{ rotate: [0, 20, 0, -15, 0] }}
@@ -159,8 +109,10 @@ export default function Footer() {
                 Lumière Travel
               </span>
             </div>
-            <p className="mb-6 max-w-xs text-sm leading-relaxed text-white/40">
-              Crafting bespoke luxury travel experiences since 2011.
+
+            <p className="mb-7 max-w-xs text-sm leading-relaxed text-white/40">
+              Architecting bespoke luxury travel experiences for the world&apos;s most
+              discerning travellers since 2011.
             </p>
 
             {/* Social icons */}
@@ -168,12 +120,10 @@ export default function Footer() {
               {SOCIALS.map((s) => (
                 <a
                   key={s.label}
-                  href="#"
+                  href={s.href}
                   title={s.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-sm transition-all duration-300 hover:bg-[#D4A853]/10 hover:text-[#D4A853]"
-                  style={{
-                    border: "1px solid rgba(255, 255, 255, 0.08)",
-                  }}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-white/40 transition-all duration-300 hover:bg-[#D4A853]/10 hover:text-[#D4A853]"
+                  style={{ border: "1px solid rgba(255,255,255,0.08)" }}
                 >
                   {s.icon}
                 </a>
@@ -181,49 +131,97 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* Link Columns */}
-          {FOOTER_COLUMNS.map((col) => (
-            <motion.div key={col.title} variants={fadeUp}>
-              <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/70">
-                {col.title}
-              </h4>
-              <ul className="space-y-2.5">
-                {col.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="group relative inline-block text-sm text-white/40 transition-colors duration-200 hover:text-[#D4A853]"
-                    >
-                      {link}
-                      <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#D4A853]/50 transition-all duration-300 group-hover:w-full" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+          {/* ── Column 2: Destinations ── */}
+          <motion.div variants={fadeUp}>
+            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.3em] text-white/50">
+              Destinations
+            </h4>
+            <ul className="space-y-3">
+              {DESTINATIONS_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="group inline-flex items-center gap-2 text-sm text-white/40 transition-colors duration-200 hover:text-[#D4A853]"
+                  >
+                    <span className="h-px w-3 bg-[#D4A853]/30 transition-all duration-300 group-hover:w-5 group-hover:bg-[#D4A853]/70" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* ── Column 3: Company ── */}
+          <motion.div variants={fadeUp}>
+            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.3em] text-white/50">
+              Company
+            </h4>
+            <ul className="space-y-3">
+              {COMPANY_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="group inline-flex items-center gap-2 text-sm text-white/40 transition-colors duration-200 hover:text-[#D4A853]"
+                  >
+                    <span className="h-px w-3 bg-[#D4A853]/30 transition-all duration-300 group-hover:w-5 group-hover:bg-[#D4A853]/70" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* ── Column 4: Contact ── */}
+          <motion.div variants={fadeUp}>
+            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.3em] text-white/50">
+              Contact
+            </h4>
+            <ul className="space-y-4 text-sm text-white/40">
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex-shrink-0 text-[#D4A853]/60">✉</span>
+                <a href="mailto:hello@lumiere.travel" className="transition-colors hover:text-[#D4A853]">
+                  hello@lumiere.travel
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex-shrink-0 text-[#D4A853]/60">◈</span>
+                <a href="tel:+442079460958" className="transition-colors hover:text-[#D4A853]">
+                  +44 20 7946 0958
+                </a>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex-shrink-0 text-[#D4A853]/60">✦</span>
+                <span className="leading-relaxed">
+                  25 Mayfair Street<br />
+                  London, W1K 5BT<br />
+                  United Kingdom
+                </span>
+              </li>
+            </ul>
+          </motion.div>
+
         </motion.div>
       </div>
 
-      {/* ═══════════════════ Bottom Bar ═══════════════════ */}
+      {/* ── Bottom bar ── */}
       <div
-        className="border-t px-6 py-6 sm:px-10 lg:px-20"
-        style={{ borderColor: "rgba(255, 255, 255, 0.04)" }}
+        className="px-4 py-5 sm:px-8 lg:px-14"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
       >
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
-          <p className="text-xs text-white/25">
+          <p className="text-xs text-white/20">
             © 2026 Lumière Travel. All rights reserved.
           </p>
-          <div className="flex items-center gap-5 text-xs text-white/25">
-            <a href="#" className="transition-colors hover:text-white/50">
+          <div className="flex items-center gap-5 text-xs text-white/20">
+            <a href="#" className="transition-colors hover:text-white/40">
               Privacy Policy
             </a>
-            <span className="text-white/10">|</span>
-            <a href="#" className="transition-colors hover:text-white/50">
+            <span className="text-white/10">·</span>
+            <a href="#" className="transition-colors hover:text-white/40">
               Terms of Service
             </a>
-            <span className="text-white/10">|</span>
-            <a href="#" className="transition-colors hover:text-white/50">
+            <span className="text-white/10">·</span>
+            <a href="#" className="transition-colors hover:text-white/40">
               Cookies
             </a>
           </div>
