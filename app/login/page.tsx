@@ -103,7 +103,7 @@ export default function LoginPage() {
         initial={{ opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="relative w-full max-w-md overflow-hidden rounded-3xl"
+        className="relative mx-4 w-full max-w-md overflow-hidden rounded-3xl"
         style={{
           background: "rgba(255, 255, 255, 0.04)",
           backdropFilter: "blur(28px)",

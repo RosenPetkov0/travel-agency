@@ -172,8 +172,8 @@ export default function HotelsClient({ hotels }: { hotels: Hotel[] }) {
           <p className="text-sm text-white/30">No hotels yet. Add your first one.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-          <table className="w-full">
+        <div className="overflow-x-auto rounded-2xl" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+          <table className="w-full min-w-[560px]">
             <thead>
               <tr style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
                 {["Name", "Location", "Per Night", "Rating", "Actions"].map((h) => (

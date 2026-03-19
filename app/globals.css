@@ -163,3 +163,16 @@ body {
 .react-datepicker__day--outside-month { color: rgba(255, 255, 255, 0.14) !important; }
 .react-datepicker__day--disabled       { color: rgba(255, 255, 255, 0.12) !important; cursor: not-allowed !important; }
 .react-datepicker__day--disabled:hover { background: transparent !important; }
+
+/* ── Mobile: prevent horizontal scroll ─────────────────────────────────────── */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* ── Accessibility: minimum touch target size ───────────────────────────────── */
+button,
+a {
+  min-height: 44px;
+}

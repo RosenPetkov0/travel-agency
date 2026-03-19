@@ -330,7 +330,7 @@ export default function HeroSection() {
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          className="flex items-center gap-5 sm:gap-10"
+          className="flex flex-wrap items-center justify-center gap-4 sm:gap-10"
         >
           {STATS.map((stat, i) => (
             <div key={stat.label} className="flex items-center gap-6 sm:gap-10">
@@ -375,7 +375,7 @@ export default function HeroSection() {
       ))}
 
       {/* ── Slideshow Dot Indicators ── */}
-      <div className="absolute bottom-[7.5rem] left-1/2 z-20 hidden -translate-x-1/2 items-center gap-2 md:flex">
+      <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 md:bottom-[7.5rem]">
         {HERO_IMAGES.map((img, i) => (
           <button
             key={img.label}
@@ -401,7 +401,7 @@ export default function HeroSection() {
         className="relative z-20 w-full px-4 pb-8 md:absolute md:bottom-8 md:left-1/2 md:max-w-4xl md:-translate-x-1/2 md:pb-0"
       >
         <div
-          className="flex flex-col items-stretch gap-2 rounded-2xl p-3 md:flex-row"
+          className="flex flex-col items-stretch gap-2 rounded-2xl p-3 lg:flex-row"
           style={{
             background: "rgba(10, 22, 40, 0.65)",
             backdropFilter: "blur(24px)",
@@ -459,7 +459,7 @@ export default function HeroSection() {
             )}
           </div>
 
-          <div className="my-2 hidden w-px bg-white/10 md:block" />
+          <div className="my-2 hidden w-px bg-white/10 lg:block" />
 
           {/* Dates */}
           <div className="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05] flex-[2] min-w-[220px]">
@@ -490,12 +490,12 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div className="my-2 hidden w-px bg-white/10 md:block" />
+          <div className="my-2 hidden w-px bg-white/10 lg:block" />
 
           {/* Travelers */}
           <div
             ref={travelersRef}
-            className="relative flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05] md:w-auto"
+            className="relative flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-white/[0.05] lg:w-auto"
             onClick={() => setShowTravelers((v) => !v)}
           >
             <span className="text-[#D4A853]">👥</span>
@@ -626,7 +626,7 @@ export default function HeroSection() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={handleSearch}
-            className="w-full whitespace-nowrap rounded-xl bg-[#D4A853] px-8 py-3.5 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-all duration-300 hover:shadow-[0_0_28px_rgba(212,168,83,0.5)] md:w-auto"
+            className="w-full whitespace-nowrap rounded-xl bg-[#D4A853] px-8 py-3.5 text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-all duration-300 hover:shadow-[0_0_28px_rgba(212,168,83,0.5)] lg:w-auto"
           >
             Search
           </motion.button>

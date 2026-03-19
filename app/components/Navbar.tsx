@@ -49,7 +49,7 @@ export default function Navbar() {
   // Close menu on resize to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) setIsOpen(false)
+      if (window.innerWidth >= 1024) setIsOpen(false)
     }
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
@@ -84,7 +84,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop links – absolutely centred */}
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm font-medium text-white/75 md:flex">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-sm font-medium text-white/75 lg:flex">
           {NAV_LINKS.map((item) => (
             <Link
               key={item.label}
@@ -98,7 +98,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop CTAs */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           {isLoggedIn ? (
             <>
               {isAdmin && (
@@ -156,7 +156,7 @@ export default function Navbar() {
         <button
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label={isOpen ? "Close menu" : "Open menu"}
-          className="relative z-[110] flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 text-white transition-colors duration-200 hover:border-[#D4A853]/50 hover:text-[#D4A853] md:hidden"
+          className="relative z-[110] flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 text-white transition-colors duration-200 hover:border-[#D4A853]/50 hover:text-[#D4A853] lg:hidden"
           style={{
             background: "rgba(10, 22, 40, 0.45)",
             backdropFilter: "blur(12px)",
@@ -214,7 +214,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-40 md:hidden"
+              className="fixed inset-0 z-40 lg:hidden"
               style={{ background: "rgba(10, 22, 40, 0.6)", backdropFilter: "blur(4px)" }}
             />
 
@@ -225,7 +225,7 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="fixed left-4 right-4 top-[72px] z-50 overflow-hidden rounded-2xl md:hidden"
+              className="fixed left-4 right-4 top-[72px] z-50 overflow-hidden rounded-2xl lg:hidden"
               style={{
                 background: "rgba(10, 22, 40, 0.82)",
                 backdropFilter: "blur(28px)",

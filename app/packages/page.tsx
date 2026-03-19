@@ -127,7 +127,7 @@ function PricingCard({ pkg, index }: { pkg: (typeof PACKAGES)[number]; index: nu
         </div>
       )}
 
-      <div className="flex flex-1 flex-col p-8 lg:p-10">
+      <div className="flex flex-1 flex-col p-6 sm:p-8 lg:p-10">
         {/* Tier label */}
         <div className="mb-1 text-xs font-bold uppercase tracking-[0.3em] text-[#D4A853]">
           {pkg.tier}
@@ -217,7 +217,7 @@ function FaqItem({
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ delay: index * 0.07, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="overflow-hidden rounded-2xl"
       style={{
@@ -383,7 +383,7 @@ export default function PackagesPage() {
           </h2>
         </motion.div>
 
-        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-start gap-6 lg:grid-cols-3 lg:gap-8">
+        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-start gap-6 md:grid-cols-3 md:gap-8">
           {PACKAGES.map((pkg, i) => (
             <PricingCard key={pkg.id} pkg={pkg} index={i} />
           ))}
