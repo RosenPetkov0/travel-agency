@@ -201,7 +201,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative h-screen w-full overflow-hidden bg-[#0A1628]"
+      className="relative min-h-screen w-full overflow-hidden bg-[#0A1628] lg:h-screen"
       onMouseMove={handleMouseMove}
     >
       {/* ── Background: Slideshow + Ken Burns + Mouse Parallax ── */}
@@ -230,7 +230,7 @@ export default function HeroSection() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0A1628]/50 to-transparent" />
 
       {/* ── Main Content ── */}
-      <div className="relative z-10 flex flex-col items-center justify-start px-4 pt-40 pb-20 text-center md:min-h-screen md:px-0 md:pt-48 md:pb-48">
+      <div className="relative z-10 flex flex-col items-center justify-start px-4 pt-32 pb-10 text-center sm:pt-40 sm:pb-14 lg:min-h-screen lg:px-0 lg:pt-48 lg:pb-48">
         {/* Badge */}
         <motion.div
           custom={0}
@@ -350,7 +350,7 @@ export default function HeroSection() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] as const }}
-        className="relative z-20 w-full px-4 pb-8 md:absolute md:bottom-8 md:left-1/2 md:max-w-4xl md:-translate-x-1/2 md:pb-0"
+        className="relative z-20 w-full px-4 pb-8 lg:absolute lg:bottom-8 lg:left-1/2 lg:max-w-4xl lg:-translate-x-1/2 lg:pb-0"
       >
         <div
           className="flex flex-col items-stretch gap-2 rounded-2xl p-3 lg:flex-row"
