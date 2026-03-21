@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import PageTransition from "./components/PageTransition"
+import Navbar from "./components/Navbar"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,10 +20,30 @@ const playfair = Playfair_Display({
   weight: ["400", "600", "700", "800"],
 })
 
+const OG_IMAGE = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80"
+
 export const metadata: Metadata = {
-  title: "Lumière Travel — Luxury Travel Experiences",
+  title: {
+    default: "Lumière Travel | Luxury Travel Experiences",
+    template: "%s | Lumière Travel",
+  },
   description:
-    "Bespoke luxury travel experiences curated for the world's most discerning travellers. Private islands, Formula 1 events, cultural immersions and more.",
+    "Tailored luxury travel to the world's most breathtaking destinations. Exclusive packages, 5-star hotels, and bespoke itineraries since 2011.",
+  openGraph: {
+    type: "website",
+    siteName: "Lumière Travel",
+    title: "Lumière Travel | Luxury Travel Experiences",
+    description:
+      "Tailored luxury travel to the world's most breathtaking destinations. Exclusive packages, 5-star hotels, and bespoke itineraries since 2011.",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Lumière Travel — Luxury Travel" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lumière Travel | Luxury Travel Experiences",
+    description:
+      "Tailored luxury travel to the world's most breathtaking destinations. Exclusive packages, 5-star hotels, and bespoke itineraries since 2011.",
+    images: [OG_IMAGE],
+  },
 }
 
 export default function RootLayout({
@@ -35,6 +56,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased overflow-x-hidden bg-[#0A1628]`}
       >
+        <Navbar />
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

@@ -301,17 +301,6 @@ export default function PackagesPage() {
         <div className="absolute inset-0 bg-[#0A1628]/65" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628]/30 via-transparent to-[#0A1628]" />
 
-        {/* Top nav */}
-        <div className="absolute left-0 right-0 top-0 z-20 flex items-center px-4 py-6 sm:px-8 lg:px-14">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm font-medium text-white/60 transition-colors hover:text-[#D4A853]"
-          >
-            <span className="text-[#D4A853]">✦</span>
-            <span>Lumière Travel</span>
-          </Link>
-        </div>
-
         <motion.div
           style={{ y: contentY }}
           className="relative z-10 px-4 text-center"

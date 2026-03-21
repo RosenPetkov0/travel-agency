@@ -1,5 +1,8 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import DestinationGallery from "./DestinationGallery"
+import BookingModal from "./BookingModal"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -49,31 +52,26 @@ const GALLERY_MAP: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1555993539-1732b0258235?w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1601581987809-a874a81309c9?w=600&auto=format&fit=crop",
   ],
   maldives: [
     "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1512100356356-de1b84283e18?w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1540202404-a2f29cf7f21c?w=600&auto=format&fit=crop",
   ],
   monaco: [
     "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1568393691622-c7ba131d1b16?w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1541849546-216549ae216d?w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop",
   ],
   amalfi: [
     "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1612831197007-8bbc55e7b39f?w=600&auto=format&fit=crop",
   ],
   kyoto: [
     "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1480796927426-f609979314bd?w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=600&auto=format&fit=crop",
   ],
 }
 
@@ -81,7 +79,6 @@ const DEFAULT_GALLERY = [
   "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&auto=format&fit=crop",
 ]
 
 const HIGHLIGHTS_MAP: Record<string, string[]> = {
@@ -213,6 +210,38 @@ function getBestMonths(location: string): number[] {
   return key ? BEST_MONTHS_MAP[key] : DEFAULT_BEST_MONTHS
 }
 
+// ─── Dynamic metadata ─────────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const dest = await fetchDestination(id)
+  if (!dest) return {}
+  const description =
+    dest.description ??
+    `Discover ${dest.name} — a breathtaking destination in ${dest.location}. Explore bespoke luxury packages curated by Lumière Travel.`
+  return {
+    title: dest.name,
+    description,
+    openGraph: {
+      title: `${dest.name} | Lumière Travel`,
+      description,
+      images: dest.image_url
+        ? [{ url: dest.image_url, width: 1200, height: 630, alt: dest.name }]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${dest.name} | Lumière Travel`,
+      description,
+      images: dest.image_url ? [dest.image_url] : [],
+    },
+  }
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function DestinationDetailPage({
@@ -303,30 +332,7 @@ export default async function DestinationDetailPage({
             <div className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4A853]" />
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#D4A853]">Gallery</span>
           </div>
-          {/* Asymmetric: 1 large left + 3 stacked right (tablet+); 2-col grid (mobile) */}
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:grid-rows-2 md:h-[520px]">
-            {/* Main image — spans 2 rows on tablet+ */}
-            <div className="col-span-2 row-span-1 overflow-hidden rounded-2xl md:col-span-2 md:row-span-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={gallery[0]}
-                alt={`${dest.name} view 1`}
-                className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                style={{ minHeight: "220px" }}
-              />
-            </div>
-            {gallery.slice(1, 4).map((src, i) => (
-              <div key={i} className="overflow-hidden rounded-2xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src}
-                  alt={`${dest.name} view ${i + 2}`}
-                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                  style={{ minHeight: "120px" }}
-                />
-              </div>
-            ))}
-          </div>
+          <DestinationGallery images={gallery} name={dest.name} />
         </section>
 
         {/* ── Overview ── */}
@@ -349,12 +355,7 @@ export default async function DestinationDetailPage({
                 <p className="mt-1 text-sm text-white/35">per person</p>
               </div>
               <div className="flex flex-col gap-3">
-                <Link
-                  href={`/about?location=${encodeURIComponent(dest.name)}#contact`}
-                  className="w-full rounded-full bg-[#D4A853] px-8 py-4 text-center text-sm font-bold uppercase tracking-widest text-[#0A1628] transition-all hover:shadow-[0_0_40px_rgba(212,168,83,0.55)]"
-                >
-                  Book Now
-                </Link>
+                <BookingModal destinationName={dest.name} price={formattedPrice} />
                 <Link
                   href={`/about?location=${encodeURIComponent(dest.name)}#contact`}
                   className="w-full rounded-full border border-white/15 px-8 py-3.5 text-center text-sm font-medium text-white/60 transition-all hover:border-white/30 hover:text-white"

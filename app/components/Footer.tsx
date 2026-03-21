@@ -1,22 +1,26 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const DESTINATIONS_LINKS = [
-  { label: "Monaco",    href: "/destinations?category=formula-1" },
-  { label: "Maldives",  href: "/destinations?category=beach-islands" },
-  { label: "Santorini", href: "/destinations?category=beach-islands" },
-  { label: "Kyoto",     href: "/destinations?category=cultural-heritage" },
+  { label: "Maldives",           href: "/destinations" },
+  { label: "Santorini",          href: "/destinations" },
+  { label: "Bali",               href: "/destinations" },
+  { label: "Monaco Grand Prix",  href: "/destinations" },
+  { label: "Amalfi Coast",       href: "/destinations" },
+  { label: "Kyoto",              href: "/destinations" },
 ]
 
 const COMPANY_LINKS = [
-  { label: "About Us",     href: "/about" },
-  { label: "Experiences",  href: "/experiences" },
-  { label: "Packages",     href: "/packages" },
-  { label: "Contact",      href: "/about#contact" },
+  { label: "About Us",    href: "/about" },
+  { label: "Experiences", href: "/experiences" },
+  { label: "Packages",    href: "/packages" },
+  { label: "Hotels",      href: "/hotels" },
+  { label: "Contact",     href: "/" },
 ]
 
 const SOCIALS = [
@@ -76,6 +80,47 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
 }
 
+// ─── Newsletter mini-form ─────────────────────────────────────────────────────
+
+function NewsletterForm() {
+  const [email, setEmail] = useState("")
+  const [sent, setSent] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim()) return
+    // Simulate subscription — replace with real integration if needed
+    setSent(true)
+  }
+
+  return sent ? (
+    <div className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm text-[#D4A853]"
+      style={{ background: "rgba(212,168,83,0.08)", border: "1px solid rgba(212,168,83,0.2)" }}>
+      <span>✦</span>
+      <span>You&apos;re on the list.</span>
+    </div>
+  ) : (
+    <form onSubmit={handleSubmit} className="flex gap-2">
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="your@email.com"
+        required
+        className="min-w-0 flex-1 rounded-xl px-3 py-2.5 text-sm text-white placeholder-white/25 outline-none focus:ring-1 focus:ring-[#D4A853]/40"
+        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+      />
+      <button
+        type="submit"
+        className="rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#0A1628] transition-all duration-200 hover:shadow-[0_0_20px_rgba(212,168,83,0.4)]"
+        style={{ background: "#D4A853" }}
+      >
+        Join
+      </button>
+    </form>
+  )
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Footer() {
@@ -85,18 +130,17 @@ export default function Footer() {
       <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D4A853]/20 to-transparent" />
 
       {/* ── Main columns ── */}
-      <div className="px-4 py-16 sm:px-8 lg:px-14 lg:py-20">
+      <div className="w-full overflow-visible px-6 py-16 sm:px-10 lg:px-20 lg:py-20">
         <motion.div
           variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          className="mx-auto grid max-w-6xl grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4"
+          viewport={{ once: true, amount: 0.1 }}
+          className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
         >
 
-          {/* ── Column 1: Brand ── */}
-          <motion.div variants={fadeUp} className="sm:col-span-2 lg:col-span-1">
-            {/* Logo */}
+          {/* ── Col 1: Brand ── */}
+          <motion.div variants={fadeUp}>
             <div className="mb-5 flex items-center gap-2.5">
               <motion.span
                 animate={{ rotate: [0, 20, 0, -15, 0] }}
@@ -115,7 +159,6 @@ export default function Footer() {
               discerning travellers since 2011.
             </p>
 
-            {/* Social icons */}
             <div className="flex items-center gap-3">
               {SOCIALS.map((s) => (
                 <a
@@ -131,7 +174,7 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* ── Column 2: Destinations ── */}
+          {/* ── Col 2: Destinations ── */}
           <motion.div variants={fadeUp}>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.3em] text-white/50">
               Destinations
@@ -151,7 +194,7 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* ── Column 3: Company ── */}
+          {/* ── Col 3: Company ── */}
           <motion.div variants={fadeUp}>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.3em] text-white/50">
               Company
@@ -171,33 +214,38 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* ── Column 4: Contact ── */}
+          {/* ── Col 4: Contact + Newsletter ── */}
           <motion.div variants={fadeUp}>
             <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.3em] text-white/50">
               Contact
             </h4>
-            <ul className="space-y-4 text-sm text-white/40">
+            <ul className="mb-7 space-y-4 text-sm text-white/40">
               <li className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 text-[#D4A853]/60">✉</span>
-                <a href="mailto:hello@lumiere.travel" className="transition-colors hover:text-[#D4A853]">
-                  hello@lumiere.travel
+                <span className="mt-0.5 shrink-0 text-[#D4A853]/60">✉</span>
+                <a href="mailto:hello@lumieretravel.com" className="transition-colors hover:text-[#D4A853]">
+                  hello@lumieretravel.com
                 </a>
               </li>
               <li className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 text-[#D4A853]/60">◈</span>
+                <span className="mt-0.5 shrink-0 text-[#D4A853]/60">◈</span>
                 <a href="tel:+442079460958" className="transition-colors hover:text-[#D4A853]">
                   +44 20 7946 0958
                 </a>
               </li>
               <li className="flex items-start gap-3">
-                <span className="mt-0.5 flex-shrink-0 text-[#D4A853]/60">✦</span>
+                <span className="mt-0.5 shrink-0 text-[#D4A853]/60">✦</span>
                 <span className="leading-relaxed">
-                  25 Mayfair Street<br />
-                  London, W1K 5BT<br />
-                  United Kingdom
+                  15 Mayfair Lane<br />
+                  London
                 </span>
               </li>
             </ul>
+
+            {/* Newsletter */}
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.25em] text-white/30">
+              Newsletter
+            </p>
+            <NewsletterForm />
           </motion.div>
 
         </motion.div>
@@ -205,7 +253,7 @@ export default function Footer() {
 
       {/* ── Bottom bar ── */}
       <div
-        className="px-4 py-5 sm:px-8 lg:px-14"
+        className="px-6 py-5 sm:px-10 lg:px-20"
         style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
       >
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
@@ -213,17 +261,11 @@ export default function Footer() {
             © 2026 Lumière Travel. All rights reserved.
           </p>
           <div className="flex items-center gap-5 text-xs text-white/20">
-            <a href="#" className="transition-colors hover:text-white/40">
-              Privacy Policy
-            </a>
+            <a href="#" className="transition-colors hover:text-white/40">Privacy Policy</a>
             <span className="text-white/10">·</span>
-            <a href="#" className="transition-colors hover:text-white/40">
-              Terms of Service
-            </a>
+            <a href="#" className="transition-colors hover:text-white/40">Terms of Service</a>
             <span className="text-white/10">·</span>
-            <a href="#" className="transition-colors hover:text-white/40">
-              Cookies
-            </a>
+            <a href="#" className="transition-colors hover:text-white/40">Cookies</a>
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -154,6 +155,40 @@ const AMENITIES = [
 
 const PLACEHOLDER_DESCRIPTION =
   "Nestled in one of the world's most coveted locations, this exceptional property redefines the meaning of luxury hospitality. Meticulously designed suites blend local artistry with contemporary elegance, while our dedicated team anticipates your every need. From sunrise breakfasts on your private terrace to moonlit dinners by the water, every moment here becomes a treasured memory."
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+// ─── Dynamic metadata ─────────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const hotel = await fetchHotel(id)
+  if (!hotel) return {}
+  const description =
+    hotel.description ??
+    `Stay at ${hotel.name} in ${hotel.location} — a world-class luxury hotel handpicked by Lumière Travel.`
+  return {
+    title: hotel.name,
+    description,
+    openGraph: {
+      title: `${hotel.name} | Lumière Travel`,
+      description,
+      images: hotel.image_url
+        ? [{ url: hotel.image_url, width: 1200, height: 630, alt: hotel.name }]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${hotel.name} | Lumière Travel`,
+      description,
+      images: hotel.image_url ? [hotel.image_url] : [],
+    },
+  }
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 

@@ -147,10 +147,6 @@ export default function DestinationsSection({ destinations }: { destinations: De
                 </div>
               </div>
 
-              <p className="mb-5 text-sm leading-relaxed text-white/50">
-                Discover the finest experiences {dest.location} has to offer
-              </p>
-
               {/* Explore link */}
               <Link
                 href={`/destinations/${dest.id}`}

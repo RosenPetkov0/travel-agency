@@ -1,6 +1,17 @@
-import Link from "next/link"
+import type { Metadata } from "next"
 import type { Destination } from "@/app/page"
 import DestinationsGrid from "./DestinationsGrid"
+
+export const metadata: Metadata = {
+  title: "Destinations",
+  description:
+    "Explore our curated collection of the world's most extraordinary destinations — from the Maldives and Santorini to Monaco, Bali, and Kyoto.",
+  openGraph: {
+    title: "Destinations | Lumière Travel",
+    description:
+      "Explore our curated collection of the world's most extraordinary destinations — from the Maldives and Santorini to Monaco, Bali, and Kyoto.",
+  },
+}
 
 // ─── Supabase REST (same pattern as root page.tsx) ────────────────────────────
 
@@ -41,17 +52,6 @@ export default async function DestinationsPage(props: {
 
   return (
     <main className="min-h-screen bg-[#0A1628]">
-      {/* ── Top nav ── */}
-      <div className="absolute left-0 right-0 top-0 z-50 flex items-center px-4 py-5 sm:px-8 lg:px-14">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-sm font-medium text-white/60 transition-colors duration-200 hover:text-[#D4A853]"
-        >
-          <span>✦</span>
-          <span>Lumière Travel</span>
-        </Link>
-      </div>
-
       {/* ── Page header ── */}
       <div className="relative flex flex-col items-center justify-center px-4 pb-12 pt-28 text-center sm:pt-32">
         {/* Decorative glow */}

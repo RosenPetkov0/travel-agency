@@ -3,7 +3,6 @@
 import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import Link from "next/link"
 import { createClient } from "@/utils/supabase/client"
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
@@ -111,17 +110,6 @@ function AboutContent() {
 
   return (
     <main className="min-h-screen bg-[#0A1628]">
-
-      {/* ── Navbar ── */}
-      <div className="absolute left-0 right-0 top-0 z-50 flex items-center px-4 py-5 sm:px-8 lg:px-14">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-sm font-medium text-white/60 transition-colors duration-200 hover:text-[#D4A853]"
-        >
-          <span className="text-[#D4A853]">✦</span>
-          <span>Lumière Travel</span>
-        </Link>
-      </div>
 
       {/* ════════════════════════════════════════════
           HERO
