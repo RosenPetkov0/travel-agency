@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import type { Destination } from "@/app/page"
+import Link from "next/link"
 import DestinationsGrid from "./DestinationsGrid"
 
 export const metadata: Metadata = {
@@ -24,11 +25,13 @@ const supabaseHeaders = {
   "Content-Type": "application/json",
 }
 
-async function fetchDestinations(query: string): Promise<Destination[]> {
-  // ilike wildcard filter — only applied when query is non-empty
-  const filter = query ? `&name=ilike.*${encodeURIComponent(query)}*` : ""
+async function fetchDestinations(query: string, category: string): Promise<Destination[]> {
+  const filters = [
+    query    ? `&name=ilike.*${encodeURIComponent(query)}*`       : "",
+    category ? `&category=ilike.*${encodeURIComponent(category)}*` : "",
+  ].join("")
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/destinations?select=*${filter}&order=rating.desc`,
+    `${SUPABASE_URL}/rest/v1/destinations?select=*${filters}&order=rating.desc`,
     { headers: supabaseHeaders, cache: "no-store" }
   )
   if (!res.ok) {
@@ -42,13 +45,14 @@ async function fetchDestinations(query: string): Promise<Destination[]> {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function DestinationsPage(props: {
-  searchParams: Promise<{ query?: string; date?: string; travelers?: string }>
+  searchParams: Promise<{ query?: string; date?: string; travelers?: string; category?: string }>
 }) {
   const searchParams = await props.searchParams
-  const query = searchParams.query?.trim() ?? ""
-  const date = searchParams.date ?? ""
+  const query    = searchParams.query?.trim() ?? ""
+  const date     = searchParams.date ?? ""
   const travelers = searchParams.travelers ?? ""
-  const destinations = await fetchDestinations(query)
+  const category = searchParams.category?.trim() ?? ""
+  const destinations = await fetchDestinations(query, category)
 
   return (
     <main className="min-h-screen bg-[#0A1628]">
@@ -67,7 +71,7 @@ export default async function DestinationsPage(props: {
         <div className="relative mb-5 flex items-center gap-3">
           <div className="h-px w-10 bg-gradient-to-r from-transparent to-[#D4A853]" />
           <span className="text-xs font-bold uppercase tracking-[0.35em] text-[#D4A853]">
-            {query ? `Search results` : "All Destinations"}
+            {query ? "Search results" : category ? `${category}` : "All Destinations"}
           </span>
           <div className="h-px w-10 bg-gradient-to-l from-transparent to-[#D4A853]" />
         </div>
@@ -80,6 +84,11 @@ export default async function DestinationsPage(props: {
             <>
               Results for{" "}
               <em className="not-italic text-[#D4A853]">&ldquo;{query}&rdquo;</em>
+            </>
+          ) : category ? (
+            <>
+              <em className="not-italic text-[#D4A853]">{category}</em>{" "}
+              Destinations
             </>
           ) : (
             <>
@@ -96,8 +105,16 @@ export default async function DestinationsPage(props: {
         </p>
 
         {/* Active filters */}
-        {(date || travelers) && (
-          <div className="relative mt-4 flex flex-wrap justify-center gap-2">
+        {(category || date || travelers) && (
+          <div className="relative mt-4 flex flex-wrap items-center justify-center gap-2">
+            {category && (
+              <span
+                className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-white/60"
+                style={{ background: "rgba(212,168,83,0.1)", border: "1px solid rgba(212,168,83,0.2)" }}
+              >
+                🗂 {category}
+              </span>
+            )}
             {date && (
               <span
                 className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-white/60"
@@ -114,6 +131,13 @@ export default async function DestinationsPage(props: {
                 👥 {travelers} traveler{travelers !== "1" ? "s" : ""}
               </span>
             )}
+            <Link
+              href="/destinations"
+              className="flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-white/40 transition-colors hover:text-[#D4A853]"
+              style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+            >
+              ✕ Clear filter
+            </Link>
           </div>
         )}
       </div>

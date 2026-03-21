@@ -4,7 +4,10 @@
       "Bash(cd:*)",
       "Bash(npx tsc:*)",
       "Bash(npm install:*)",
-      "Bash(find /d/github/Git/travel-agency -maxdepth 3 -not -path */node_modules/* -not -path */.next/* -not -path */.git/* -type d)"
+      "Bash(find /d/github/Git/travel-agency -maxdepth 3 -not -path */node_modules/* -not -path */.next/* -not -path */.git/* -type d)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Supabase__apply_migration"
     ]
   }
 }

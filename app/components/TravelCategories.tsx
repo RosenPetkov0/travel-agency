@@ -6,12 +6,12 @@ import { motion } from "framer-motion"
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const CATEGORIES = [
-  { label: "Beach & Islands",   emoji: "🏖️", slug: "beach-islands"     },
-  { label: "City Breaks",       emoji: "🏙️", slug: "city-breaks"        },
-  { label: "Formula 1 Events",  emoji: "🏎️", slug: "formula-1"          },
-  { label: "Mountain Escapes",  emoji: "⛰️", slug: "mountain-escapes"   },
-  { label: "Cultural Heritage", emoji: "🏛️", slug: "cultural-heritage"  },
-  { label: "Luxury Resorts",    emoji: "💎", slug: "luxury-resorts"     },
+  { label: "Beach & Islands",   emoji: "🏖️", dbValue: "Beach & Islands"    },
+  { label: "City Breaks",       emoji: "🏙️", dbValue: "City Breaks"        },
+  { label: "Formula 1 Events",  emoji: "🏎️", dbValue: "F1 Events"          },
+  { label: "Mountain Escapes",  emoji: "⛰️", dbValue: "Mountain Escapes"   },
+  { label: "Cultural Heritage", emoji: "🏛️", dbValue: "Cultural Heritage"  },
+  { label: "Luxury Resorts",    emoji: "💎", dbValue: "Luxury Resorts"     },
 ]
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -71,14 +71,14 @@ export default function TravelCategories() {
         >
           {CATEGORIES.map((cat, i) => (
             <motion.button
-              key={cat.slug}
+              key={`cat-${cat.dbValue}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ delay: i * 0.07, duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
               whileHover={{ y: -5, scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
-              onClick={() => router.push(`/destinations?category=${cat.slug}`)}
+              onClick={() => router.push(`/destinations?category=${encodeURIComponent(cat.dbValue)}`)}
               className="
                 group relative flex min-w-[148px] flex-col items-center justify-center
                 gap-3 rounded-2xl px-4 py-7 text-center

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation"
 import DatePicker from "react-datepicker"
 import { format } from "date-fns"
 import "react-datepicker/dist/react-datepicker.css"
-import Navbar from "./Navbar"
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -40,11 +39,6 @@ const SUGGESTIONS = [
   { label: "Bali", sub: "Indonesia · Tropical" },
 ]
 
-const STATS = [
-  { value: "500+", label: "Destinations" },
-  { value: "10k+", label: "Happy Travelers" },
-  { value: "15 Yrs", label: "Excellence" },
-]
 
 const BADGES = [
   {
@@ -207,7 +201,7 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative min-h-screen w-full bg-[#0A1628]"
+      className="relative h-screen w-full overflow-hidden bg-[#0A1628]"
       onMouseMove={handleMouseMove}
     >
       {/* ── Background: Slideshow + Ken Burns + Mouse Parallax ── */}
@@ -235,11 +229,8 @@ export default function HeroSection() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0A1628]/55 via-[#0A1628]/30 to-[#0A1628]/90" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0A1628]/50 to-transparent" />
 
-      {/* ── Navbar ── */}
-      <Navbar />
-
       {/* ── Main Content ── */}
-      <div className="relative z-10 flex flex-col items-center justify-start px-4 pt-40 pb-20 text-center md:px-0 md:pt-48 md:pb-40 lg:min-h-screen">
+      <div className="relative z-10 flex flex-col items-center justify-start px-4 pt-40 pb-20 text-center md:min-h-screen md:px-0 md:pt-48 md:pb-48">
         {/* Badge */}
         <motion.div
           custom={0}
@@ -324,26 +315,6 @@ export default function HeroSection() {
           </motion.button>
         </motion.div>
 
-        {/* Stats */}
-        <motion.div
-          custom={4}
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-wrap items-center justify-center gap-4 sm:gap-10"
-        >
-          {STATS.map((stat, i) => (
-            <div key={stat.label} className="flex items-center gap-6 sm:gap-10">
-              {i > 0 && <div className="h-8 w-px bg-white/20" />}
-              <div className="text-center">
-                <div className="text-xl font-bold text-white">{stat.value}</div>
-                <div className="mt-0.5 text-xs tracking-wider text-white/45">
-                  {stat.label}
-                </div>
-              </div>
-            </div>
-          ))}
-        </motion.div>
       </div>
 
       {/* ── Floating Destination Badges ── */}
@@ -373,25 +344,6 @@ export default function HeroSection() {
           </div>
         </motion.div>
       ))}
-
-      {/* ── Slideshow Dot Indicators ── */}
-      <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 md:bottom-[7.5rem]">
-        {HERO_IMAGES.map((img, i) => (
-          <button
-            key={img.label}
-            onClick={() => setCurrentSlide(i)}
-            aria-label={`Go to slide ${img.label}`}
-            className="transition-all duration-300"
-            style={{
-              width: i === currentSlide ? "24px" : "8px",
-              height: "8px",
-              borderRadius: "9999px",
-              background: i === currentSlide ? "#D4A853" : "rgba(255,255,255,0.25)",
-              boxShadow: i === currentSlide ? "0 0 10px rgba(212,168,83,0.6)" : "none",
-            }}
-          />
-        ))}
-      </div>
 
       {/* ── Booking Widget ── */}
       <motion.div
