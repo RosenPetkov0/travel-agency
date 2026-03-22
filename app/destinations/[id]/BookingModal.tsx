@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { createClient } from "@/utils/supabase/client"
+import { toast } from "sonner"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,7 +55,6 @@ function ModalPanel({
   const [form, setForm] = useState<FormState>(EMPTY)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
 
   const set = (field: keyof FormState) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -86,7 +86,11 @@ function ModalPanel({
       setError("Something went wrong. Please try again.")
       return
     }
-    setSuccess(true)
+    toast.success("Enquiry sent! We'll be in touch within 24 hours.", {
+      icon: '✦',
+      duration: 5000,
+    })
+    setTimeout(onClose, 1000)
   }
 
   return (
@@ -148,47 +152,8 @@ function ModalPanel({
         {/* Body */}
         <div className="flex-1 px-7 py-6">
           <AnimatePresence mode="wait">
-            {success ? (
-              /* ── Success state ── */
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="flex flex-col items-center py-8 text-center"
-              >
-                {/* Golden checkmark */}
-                <div
-                  className="mb-6 flex h-16 w-16 items-center justify-center rounded-full"
-                  style={{
-                    background: "rgba(212,168,83,0.12)",
-                    border: "1px solid rgba(212,168,83,0.35)",
-                  }}
-                >
-                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
-                    stroke="#D4A853" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="5 14 11 20 23 8" />
-                  </svg>
-                </div>
-                <h3
-                  className="mb-2 text-2xl font-bold text-white"
-                  style={{ fontFamily: "var(--font-playfair)" }}
-                >
-                  Your enquiry has been sent!
-                </h3>
-                <p className="mb-8 text-sm text-white/50">
-                  We&apos;ll be in touch within 24 hours.
-                </p>
-                <button
-                  onClick={onClose}
-                  className="rounded-full border border-white/15 px-8 py-3 text-sm font-medium text-white/60 transition-all hover:border-white/30 hover:text-white"
-                >
-                  Close
-                </button>
-              </motion.div>
-            ) : (
-              /* ── Form ── */
-              <motion.form
+            {/* ── Form ── */}
+            <motion.form
                 key="form"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -236,10 +201,16 @@ function ModalPanel({
                       value={form.travelers}
                       onChange={set("travelers")}
                       className={inputClass}
-                      style={{ ...inputStyle, colorScheme: "dark" }}
+                      style={{ ...inputStyle, colorScheme: "dark", backgroundColor: "rgb(8, 18, 38)", color: "white" }}
                     >
                       {["1", "2", "3", "4", "5", "6", "7", "8+"].map((n) => (
-                        <option key={n} value={n}>{n} {n === "1" ? "traveler" : "travelers"}</option>
+                        <option
+                          key={n}
+                          value={n}
+                          style={{ backgroundColor: "rgb(8, 18, 38)", color: "white" }}
+                        >
+                          {n} {n === "1" ? "traveler" : "travelers"}
+                        </option>
                       ))}
                     </select>
                   </Field>
@@ -283,7 +254,6 @@ function ModalPanel({
                   {loading ? "Sending…" : "Send Enquiry"}
                 </button>
               </motion.form>
-            )}
           </AnimatePresence>
         </div>
       </motion.div>

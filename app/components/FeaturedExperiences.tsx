@@ -1,7 +1,7 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useInView } from "framer-motion"
+import { useRef, useEffect } from "react"
+import { motion, useInView, useScroll, useTransform } from "framer-motion"
 import Link from "next/link"
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -52,6 +52,18 @@ function ExperienceRow({
   const inView = useInView(ref, { once: true, amount: 0.2 })
   const isEven = index % 2 === 0
 
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const imageY = useTransform(scrollYProgress, [0, 1], ['5%', '-5%'])
+
+  const imageContainerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    return imageY.on('change', (latest) => {
+      if (imageContainerRef.current) {
+        imageContainerRef.current.style.transform = `translateY(${latest})`
+      }
+    })
+  }, [imageY])
+
   return (
     <div
       ref={ref}
@@ -68,12 +80,14 @@ function ExperienceRow({
         transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="relative min-h-[300px] overflow-hidden md:min-h-[420px] md:w-[55%]"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={exp.image}
-          alt={exp.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-        />
+        <div ref={imageContainerRef} className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={exp.image}
+            alt={exp.title}
+            className="h-full w-full object-cover scale-110"
+          />
+        </div>
         {/* Gradient overlay toward text side */}
         <div
           className={`absolute inset-0 ${isEven ? "bg-gradient-to-r" : "bg-gradient-to-l"} from-transparent via-transparent to-[#0A1628]/70`}

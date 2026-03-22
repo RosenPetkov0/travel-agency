@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { toast } from "sonner"
 import { addDestination, updateDestination, deleteDestination } from "./actions"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -120,14 +121,17 @@ export default function DestinationsClient({
       try {
         if (modal?.mode === "add") {
           await addDestination(fd)
+          toast.success("Destination added successfully")
         } else if (modal?.mode === "edit") {
           fd.set("id", modal.destination.id)
           await updateDestination(fd)
+          toast.success("Changes saved")
         }
         setModal(null)
         router.refresh()
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong.")
+        toast.error("Something went wrong. Please try again.")
       }
     })
   }
@@ -138,10 +142,12 @@ export default function DestinationsClient({
     startTransition(async () => {
       try {
         await deleteDestination(id)
+        toast.success("Destination deleted")
         setModal(null)
         router.refresh()
       } catch (err) {
         setError(err instanceof Error ? err.message : "Delete failed.")
+        toast.error("Something went wrong. Please try again.")
       }
     })
   }

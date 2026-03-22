@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { toast } from "sonner"
 import { addHotel, updateHotel, deleteHotel } from "./actions"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -113,14 +114,17 @@ export default function HotelsClient({ hotels }: { hotels: Hotel[] }) {
       try {
         if (modal?.mode === "add") {
           await addHotel(fd)
+          toast.success("Hotel added successfully")
         } else if (modal?.mode === "edit") {
           fd.set("id", modal.hotel.id)
           await updateHotel(fd)
+          toast.success("Changes saved")
         }
         setModal(null)
         router.refresh()
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong.")
+        toast.error("Something went wrong. Please try again.")
       }
     })
   }
@@ -131,10 +135,12 @@ export default function HotelsClient({ hotels }: { hotels: Hotel[] }) {
     startTransition(async () => {
       try {
         await deleteHotel(id)
+        toast.success("Hotel deleted")
         setModal(null)
         router.refresh()
       } catch (err) {
         setError(err instanceof Error ? err.message : "Delete failed.")
+        toast.error("Something went wrong. Please try again.")
       }
     })
   }

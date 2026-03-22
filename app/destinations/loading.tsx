@@ -1,28 +1,22 @@
-// ─── Skeleton helpers ─────────────────────────────────────────────────────────
-
-function Bone({ className }: { className: string }) {
-  return <div className={`animate-pulse rounded-2xl bg-white/5 ${className}`} />
-}
+// ─── Skeleton card ────────────────────────────────────────────────────────────
 
 function CardSkeleton() {
   return (
     <div
-      className="overflow-hidden rounded-3xl"
+      className="overflow-hidden rounded-3xl bg-white/5 animate-pulse"
       style={{ border: "1px solid rgba(255,255,255,0.06)" }}
     >
       {/* Image area */}
-      <Bone className="h-56 w-full rounded-none rounded-t-3xl sm:h-64" />
+      <div className="h-80 w-full bg-white/5" />
 
       {/* Body */}
       <div className="space-y-3 p-5">
-        {/* Gold accent line */}
-        <div className="h-0.5 w-8 animate-pulse rounded-full bg-[#D4A853]/20" />
-        <Bone className="h-5 w-3/4" />
-        <Bone className="h-3.5 w-1/2" />
-        <Bone className="h-3 w-full" />
-        <Bone className="h-3 w-5/6" />
-        {/* Button */}
-        <Bone className="mt-4 h-10 w-full" />
+        {/* Golden shimmer accent */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D4A853]/20 to-transparent" />
+        {/* Name */}
+        <div className="h-4 w-3/4 rounded-full bg-white/10" />
+        {/* Location */}
+        <div className="h-3 w-1/2 rounded-full bg-white/10" />
       </div>
     </div>
   )
@@ -34,40 +28,24 @@ export default function DestinationsLoading() {
   return (
     <div className="min-h-screen bg-[#0A1628]">
 
-      {/* Hero skeleton */}
-      <div className="relative flex h-72 items-end overflow-hidden sm:h-80">
-        <Bone className="absolute inset-0 rounded-none" />
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{ background: "linear-gradient(to top, #0A1628 0%, transparent 60%)" }}
-        />
-        <div className="relative w-full px-6 pb-10 sm:px-10 lg:px-20">
-          <Bone className="mb-3 h-3 w-28" />
-          <Bone className="mb-2 h-9 w-64 sm:w-96" />
-          <Bone className="h-4 w-48 sm:w-72" />
+      {/* Page header skeleton */}
+      <div className="flex flex-col items-center px-4 pb-12 pt-28 text-center sm:pt-32">
+        {/* Label line */}
+        <div className="mb-5 flex items-center gap-3">
+          <div className="h-px w-10 bg-[#D4A853]/20" />
+          <div className="h-3 w-32 animate-pulse rounded-full bg-white/10" />
+          <div className="h-px w-10 bg-[#D4A853]/20" />
         </div>
+        {/* Title */}
+        <div className="mb-4 h-9 w-72 animate-pulse rounded-full bg-white/10 sm:w-96" />
+        {/* Subtitle */}
+        <div className="h-4 w-48 animate-pulse rounded-full bg-white/[0.06] sm:w-64" />
       </div>
 
-      {/* Filter bar skeleton */}
-      <div
-        className="border-b px-6 py-4 sm:px-10 lg:px-20"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}
-      >
-        <div className="mx-auto flex max-w-7xl items-center gap-2">
-          {[80, 120, 100, 96].map((w, i) => (
-            <div
-              key={i}
-              className="h-8 animate-pulse rounded-full bg-white/5"
-              style={{ width: w }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Grid */}
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-20">
-        <div className="grid gap-8 sm:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
+      {/* Grid — matches real page: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 */}
+      <div className="mx-auto max-w-6xl px-4 pb-24 sm:px-10 lg:px-20">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
             <CardSkeleton key={i} />
           ))}
         </div>

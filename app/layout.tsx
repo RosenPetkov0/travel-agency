@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import PageTransition from "./components/PageTransition"
 import Navbar from "./components/Navbar"
+import CustomCursor from "./components/CustomCursor"
+import { Toaster } from 'sonner'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,7 +58,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased overflow-x-hidden bg-[#0A1628]`}
       >
+        <CustomCursor />
         <Navbar />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: 'rgba(15, 23, 42, 0.95)',
+              border: '1px solid rgba(212, 168, 83, 0.3)',
+              color: '#fff',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '12px',
+              fontFamily: 'var(--font-geist-sans)',
+            },
+          }}
+        />
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

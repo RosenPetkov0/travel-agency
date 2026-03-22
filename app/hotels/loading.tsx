@@ -1,35 +1,22 @@
-// ─── Skeleton helpers ─────────────────────────────────────────────────────────
-
-function Bone({ className }: { className: string }) {
-  return <div className={`animate-pulse rounded-2xl bg-white/5 ${className}`} />
-}
+// ─── Skeleton card ────────────────────────────────────────────────────────────
 
 function CardSkeleton() {
   return (
     <div
-      className="overflow-hidden rounded-3xl"
+      className="overflow-hidden rounded-3xl bg-white/5 animate-pulse"
       style={{ border: "1px solid rgba(255,255,255,0.06)" }}
     >
-      {/* Image */}
-      <Bone className="h-64 w-full rounded-none rounded-t-3xl sm:h-72" />
+      {/* Image area */}
+      <div className="h-80 w-full bg-white/5" />
 
       {/* Body */}
-      <div className="space-y-3 p-6">
-        {/* Gold accent line */}
-        <div className="h-0.5 w-8 animate-pulse rounded-full bg-[#D4A853]/20" />
-        {/* Name + stars row */}
-        <div className="flex items-center justify-between gap-4">
-          <Bone className="h-5 w-1/2" />
-          <div className="flex gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-3 w-3 animate-pulse rounded-sm bg-white/5" />
-            ))}
-          </div>
-        </div>
-        <Bone className="h-3 w-full" />
-        <Bone className="h-3 w-4/5" />
-        {/* Button */}
-        <Bone className="mt-4 h-11 w-full" />
+      <div className="space-y-3 p-5">
+        {/* Golden shimmer accent */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D4A853]/20 to-transparent" />
+        {/* Name */}
+        <div className="h-4 w-3/4 rounded-full bg-white/10" />
+        {/* Location */}
+        <div className="h-3 w-1/2 rounded-full bg-white/10" />
       </div>
     </div>
   )
@@ -41,64 +28,31 @@ export default function HotelsLoading() {
   return (
     <div className="min-h-screen bg-[#0A1628]">
 
-      {/* Hero skeleton */}
+      {/* Hero skeleton — matches HotelsClient's full-height hero */}
       <div className="relative flex h-[88vh] min-h-[580px] items-end overflow-hidden">
-        <Bone className="absolute inset-0 rounded-none" />
+        <div className="absolute inset-0 animate-pulse bg-white/5" />
         <div
           className="pointer-events-none absolute inset-0"
           style={{ background: "linear-gradient(to top, #0A1628 0%, rgba(10,22,40,0.2) 60%)" }}
         />
-        {/* Gold shimmer accent */}
-        <div
-          className="pointer-events-none absolute inset-0 animate-pulse"
-          style={{
-            background: "radial-gradient(ellipse at 30% 80%, rgba(212,168,83,0.05) 0%, transparent 60%)",
-          }}
-        />
-        <div className="relative w-full px-6 pb-20 sm:px-10 lg:px-20">
-          <div className="mb-5 flex items-center gap-3">
-            <div className="h-px w-10 bg-[#D4A853]/20" />
-            <Bone className="h-3 w-32" />
-          </div>
-          <Bone className="mb-4 h-14 w-72 sm:w-[480px]" />
-          <Bone className="mb-2 h-14 w-48 sm:w-64" />
-          <Bone className="mt-4 h-4 w-80 sm:w-[420px]" />
-          <Bone className="mt-2 h-4 w-64 sm:w-96" />
-          {/* Stats row */}
-          <div className="mt-10 flex items-center gap-8">
-            {["w-12", "w-9", "w-10"].map((w, i) => (
-              <div key={i} className="space-y-1.5">
-                <Bone className={`h-7 ${w}`} />
-                <Bone className="h-2.5 w-20" />
-              </div>
-            ))}
+        {/* Golden shimmer line across bottom of hero */}
+        <div className="relative w-full">
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D4A853]/20 to-transparent" />
+          <div className="px-6 pb-20 pt-4 sm:px-10 lg:px-20">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-px w-10 bg-[#D4A853]/20" />
+              <div className="h-3 w-28 animate-pulse rounded-full bg-white/10" />
+            </div>
+            <div className="mb-4 h-12 w-72 animate-pulse rounded-full bg-white/10 sm:w-[420px]" />
+            <div className="h-4 w-64 animate-pulse rounded-full bg-white/[0.06] sm:w-96" />
           </div>
         </div>
       </div>
 
-      {/* Filter bar skeleton */}
-      <div
-        className="border-b px-6 py-4 sm:px-10 lg:px-20"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2">
-          <div className="flex flex-wrap gap-2">
-            {[80, 140, 140, 96].map((w, i) => (
-              <div
-                key={i}
-                className="h-9 animate-pulse rounded-full bg-white/5"
-                style={{ width: w }}
-              />
-            ))}
-          </div>
-          <Bone className="hidden h-3 w-20 sm:block" />
-        </div>
-      </div>
-
-      {/* Grid */}
+      {/* Grid — matches real page: sm:grid-cols-2 */}
       <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-20">
         <div className="grid gap-8 sm:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_, i) => (
             <CardSkeleton key={i} />
           ))}
         </div>
